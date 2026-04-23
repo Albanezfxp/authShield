@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -27,11 +31,11 @@ export class UserService {
     });
 
     if (userExist) {
-      throw new HttpException('User not found', 409);
+      throw new HttpException('Email já cadastrado', 409);
     }
 
     if (user.password !== user.confirm_password) {
-      throw new HttpException('Password does not match', 401);
+      throw new HttpException('Senhas não são iguais', 400);
     }
 
     const hashPassword = await hash(user.password, 10);
@@ -54,7 +58,7 @@ export class UserService {
     });
 
     if (!user_bd) {
-      throw new HttpException('user not found', 404);
+      throw new UnauthorizedException('Email ou senha invalidos');
     }
 
     const isPasswordValid = await compare(user.password, user_bd.password);

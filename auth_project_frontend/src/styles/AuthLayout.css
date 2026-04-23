@@ -1,0 +1,252 @@
+/* Layout geral */
+.auth-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f5efe5 0%, #ebe3d6 100%);
+}
+
+.auth-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1200px;
+  width: 100%;
+  align-items: center;
+}
+
+/* Card */
+.auth-card {
+  background: #fdfaf3;
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+  border: 1px solid #d4c4b0;
+}
+
+/* Header */
+.auth-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.auth-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #2c2416;
+}
+
+.auth-header p {
+  color: #5c5652;
+}
+
+/* ========================= */
+/* 🔥 FORM ORIGINAL (IMPORTANTE) */
+/* ========================= */
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #2c2416;
+}
+
+.formGroup input {
+  padding: 0.875rem 1.25rem;
+  border: 1.5px solid #d4c4b0;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #8b5a2b;
+}
+
+/* Footer do form */
+.formFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.forgotPassword {
+  font-size: 0.9rem;
+  color: #8b5a2b;
+  text-decoration: none;
+}
+
+/* Botão principal */
+.submitBtn {
+  padding: 1rem;
+  background: linear-gradient(135deg, #8b5a2b, #6b5344);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Botão secundário */
+.btn-secondary {
+  padding: 1rem;
+  background: transparent;
+  color: #8b5a2b;
+  border: 2px solid #8b5a2b;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #d4c4b0;
+}
+
+/* Illustration */
+.loginIllustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: slideInRight 0.6s ease-out;
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.illustrationBox {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #a0694f15, #6b534415);
+  border-radius: 2rem;
+  padding: 2rem;
+  border: 1px solid #d4c4b0;
+  overflow: hidden;
+} /* Illustration Items */
+.illustrationItem {
+  position: absolute;
+  background: linear-gradient(135deg, #8b5a2b, #6b5344);
+  opacity: 0;
+  animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.item1 {
+  width: 60px;
+  height: 60px;
+  border-radius: 1rem;
+  top: 20%;
+  left: 15%;
+  animation-delay: 0.2s;
+}
+.item2 {
+  width: 100px;
+  height: 100px;
+  border-radius: 1.5rem;
+  bottom: 15%;
+  right: 10%;
+  animation-delay: 0.4s;
+}
+.item3 {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.75rem;
+  top: 60%;
+  right: 20%;
+  animation-delay: 0.6s;
+}
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: scale(0) translateY(20px);
+  }
+  100% {
+    opacity: 0.15;
+    transform: scale(1) translateY(0);
+  }
+}
+.illustrationText {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: #2c2416;
+}
+.illustrationText h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.5px;
+}
+.illustrationText p {
+  font-size: 1rem;
+  color: #5c5652;
+  line-height: 1.6;
+  max-width: 300px;
+}
+/* Responsivo */
+@media (max-width: 1024px) {
+  .auth-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+
+  .auth-illustration {
+    display: none;
+  }
+}

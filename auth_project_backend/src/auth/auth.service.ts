@@ -37,20 +37,17 @@ export class AuthService {
     };
   }
 
-  async refresh(req) {
-    const { refresh_token } = req;
-
-    if (!refresh_token) {
-      throw new HttpException('Refresh token not found', 403);
-    }
-
+  async refresh(refresh_token: string) {
     try {
-      const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY!);
+      const decoded: any = jwt.verify(
+        refresh_token,
+        process.env.REFRESH_TOKEN_KEY!,
+      );
 
       const userId = decoded.sub;
 
       if (!userId) {
-        throw new HttpException('Sub not found', 404);
+        throw new HttpException('Invalid token', 403);
       }
 
       const user = await this.prisma.user.findUnique({
@@ -60,6 +57,7 @@ export class AuthService {
       if (!user || !user.refreshToken) {
         throw new HttpException('Access denied', 403);
       }
+
       const isValid = await compare(refresh_token, user.refreshToken);
 
       if (!isValid) {
@@ -73,16 +71,15 @@ export class AuthService {
       };
 
       const tokens = await this.login(payload);
+
       const hashedToken = await hash(tokens.refresh_token, 10);
 
       await this.prisma.user.update({
         where: { id: user.id },
         data: { refreshToken: hashedToken },
       });
-      return {
-        access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
-      };
+
+      return tokens;
     } catch (error) {
       throw new HttpException('Invalid or expired token', 403);
     }
