@@ -11,6 +11,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import type { Response, Request } from 'express';
@@ -49,8 +50,9 @@ export class UserController {
 
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: false,
+      sameSite: 'none',
+      path: '/',
     });
 
     return { access_token };
@@ -61,7 +63,7 @@ export class UserController {
     const refreshToken = req.cookies?.refresh_token;
 
     if (!refreshToken) {
-      throw new Error('Refresh token not found');
+      throw new UnauthorizedException('Refresh token not found');
     }
 
     return this.authService.refresh(refreshToken);

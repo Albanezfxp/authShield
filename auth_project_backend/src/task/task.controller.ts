@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
@@ -19,7 +20,6 @@ import { role } from '@prisma/client';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.taskService.findAll();
@@ -38,7 +38,7 @@ export class TaskController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Put(':id')
   update(@Body() UpdateTaskDto: UpdateTaskDto, @Param('id') id: number) {
     return this.taskService.update(UpdateTaskDto, id);
   }

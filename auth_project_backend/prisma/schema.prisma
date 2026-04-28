@@ -11,6 +11,12 @@ enum role {
   USER
 }
 
+enum situation {
+  TO_DO
+  IN_PROGRESS
+  DONE
+}
+
 model User {
   id Int @default(autoincrement()) @id
   email String @unique
@@ -24,7 +30,8 @@ model User {
 model Task {
   id Int @default(autoincrement()) @id
   task_name String
-  completed Boolean @default(false)
+  description String
+  situation situation @default(TO_DO)
   userId Int
   user User @relation(fields: [userId], references: [id])
 }

@@ -4,9 +4,11 @@ import { fetchLogin } from "../api";
 import { toast } from "react-toastify";
 import type { loginRequest } from "../types/interfaces/login_request.interface";
 import AuthLayout from "../components/_shared_/AuthLayout";
+import { useAuth } from "../commons/hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
+  const auth = useAuth();
   const [formData, setFormData] = useState<loginRequest>({
     email: "",
     password: "",
@@ -21,6 +23,7 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const payload = {
         email: formData.email.trim(),
@@ -28,16 +31,21 @@ export default function Login() {
       };
 
       const response = await fetchLogin(payload);
+      console.log("TOKEN:", response.data.access_token);
 
-      if (response) {
-        toast.success("Login feito!");
-        navigate("/");
+      if (!response.data?.access_token) {
+        throw new Error("Credenciais inválidas");
       }
-    } catch (error) {
-      toast.error("Credenciais invalidas!");
-    }
 
-    console.log(formData);
+      toast.success("Login feito!");
+
+      auth.setAccess_token(response.data.access_token);
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error(error);
+      toast.error("Credenciais inválidas!");
+    }
   };
 
   return (

@@ -40,7 +40,12 @@ export default function Home() {
 
   return (
     <div className="container">
-      <Header />
+      <Header
+        login={false}
+        completedTasks={null}
+        setShowModal={undefined}
+        totalTasks={null}
+      />
       <section className="hero">
         <div className="heroContent">
           <div className="heroText">
@@ -92,22 +97,13 @@ export default function Home() {
                 </div>
                 <div className="column">
                   <div className="columnTitle">Em progresso</div>
-                  <div className="card">
-                    <span className="badge">Design</span>
-                    Página inicial
-                  </div>
+                  <div className="card">Página inicial</div>
                   <div className="card">API de tarefas</div>
                 </div>
                 <div className="column">
                   <div className="columnTitle">Concluído</div>
-                  <div className="card">
-                    <span className="badge">Completo</span>
-                    Banco de dados
-                  </div>
-                  <div className="card">
-                    <span className="badge">Completo</span>
-                    Autenticação
-                  </div>
+                  <div className="card">Banco de dados</div>
+                  <div className="card">Autenticação</div>
                 </div>
               </div>
             </div>

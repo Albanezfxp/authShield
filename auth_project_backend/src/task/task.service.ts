@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Req } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task-dto';
 import { UpdateTaskDto } from './dto/update-task-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { situation } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
@@ -10,26 +11,90 @@ export class TaskService {
   async findAll() {
     return this.prisma.task.findMany();
   }
+
   async findById(id: number) {
-    return this.prisma.task.findFirst({
+    const task = await this.prisma.task.findUnique({
       where: { id },
     });
+
+    if (!task) {
+      throw new HttpException('Task não encontrada', 404);
+    }
+
+    return task;
   }
-  async create(CreateTaskDto: CreateTaskDto) {
+
+  async create(createTaskDto: CreateTaskDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: createTaskDto.userId },
+    });
+
+    if (!user) {
+      throw new HttpException('Usuário não existe', 404);
+    }
+
     return this.prisma.task.create({
-      data: CreateTaskDto,
+      data: {
+        task_name: createTaskDto.task_name,
+        description: createTaskDto.description,
+        situation: situation.TO_DO,
+        userId: user.id,
+      },
     });
   }
+
   async update(updateTaskDto: UpdateTaskDto, id: number) {
+    const taskExists = await this.prisma.task.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!taskExists) {
+      throw new HttpException('Task não encontrada', 404);
+    }
+
+    const data: any = {};
+
+    if (updateTaskDto.task_name !== undefined) {
+      data.task_name = updateTaskDto.task_name;
+    }
+
+    if (updateTaskDto.description !== undefined) {
+      data.description = updateTaskDto.description;
+    }
+
+    if (updateTaskDto.situation !== undefined) {
+      data.situation = updateTaskDto.situation;
+    }
+
+    if (updateTaskDto.userId !== undefined) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: updateTaskDto.userId },
+      });
+
+      if (!user) {
+        throw new HttpException('Usuário não existe', 404);
+      }
+
+      data.userId = user.id;
+    }
+
     return this.prisma.task.update({
-      where: { id: id },
-      data: updateTaskDto,
+      where: { id: Number(id) },
+      data,
     });
   }
 
   async delete(id: number) {
+    const taskExists = await this.prisma.task.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!taskExists) {
+      throw new HttpException('Task não encontrada', 404);
+    }
+
     return this.prisma.task.delete({
-      where: { id },
+      where: { id: Number(id) },
     });
   }
 }

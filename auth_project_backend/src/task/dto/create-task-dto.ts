@@ -1,11 +1,26 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+
+export enum situation {
+  TO_DO,
+  IN_PROGRESS,
+  DONE,
+}
 
 export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
   task_name!: string;
-  @IsBoolean()
-  completed!: boolean;
+  @IsNotEmpty()
+  @IsOptional()
+  situation!: situation;
+  @IsString()
+  description!: string;
   @IsNumber()
   @IsNotEmpty()
   userId!: number;

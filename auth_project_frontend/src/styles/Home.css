@@ -40,9 +40,9 @@ html {
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   background: var(--color-background);
   color: var(--color-text);
   line-height: 1.6;
@@ -50,7 +50,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Container */
 .container {
   width: 100%;
   min-height: 100vh;
@@ -59,7 +58,6 @@ body {
   background: linear-gradient(135deg, #f5efe5 0%, #ebe3d6 100%);
 }
 
-/* Navbar */
 .navbar {
   position: sticky;
   top: 0;
@@ -89,6 +87,7 @@ body {
   color: var(--color-text);
   text-decoration: none;
   letter-spacing: -0.5px;
+  cursor: pointer;
 }
 
 .logoIcon {

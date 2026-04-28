@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // ✅ Disponível em todo lugar
+      isGlobal: true,
     }),
     PrismaModule,
     AuthModule,
