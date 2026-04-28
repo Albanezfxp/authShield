@@ -129,7 +129,10 @@ export default function Home() {
           <h2>Pronto para aumentar sua produtividade?</h2>
           <p>Comece a usar TaskFlow gratuitamente, sem cartão de crédito</p>
           <div className="createAccountBtnContainer">
-            <button className="primaryBtn" onClick={handleLoginClick}>
+            <button
+              className="primaryBtn"
+              onClick={() => navigate("/register")}
+            >
               Criar Conta
               <ArrowRight size={20} />
             </button>

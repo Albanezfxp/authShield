@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import type { CreateTaskInterface } from "./types/interfaces/create_task.interface";
 
 const api = axios.create({
-  baseURL: "http://localhost:3333",
+  baseURL: "http://backend:3333",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -70,6 +70,13 @@ export const fetchAddTask = async (
 
 export const fetchTasks = async (token: any) => {
   const response = await api.get("/task", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response;
+};
+
+export const fetchTasksByUser = async (id: number, token: any) => {
+  const response = await api.get(`/task/byUser/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response;

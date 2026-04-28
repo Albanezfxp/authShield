@@ -20,8 +20,12 @@ export default function AuthLayout({
 
   return (
     <div className="auth-container">
-      <Header />
-
+      <Header
+        login={false}
+        completedTasks={null}
+        setShowModal={undefined}
+        totalTasks={null}
+      />
       <section className="auth-section">
         <div className="auth-wrapper">
           <div className="auth-card">

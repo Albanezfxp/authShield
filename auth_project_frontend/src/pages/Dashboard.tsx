@@ -9,6 +9,7 @@ import {
   fetchUpdateTask,
   fetchDeleteTask,
   fetchRefresh,
+  fetchTasksByUser,
 } from "../api";
 import { toast } from "react-toastify";
 import Header from "../components/_shared_/Header";
@@ -49,7 +50,7 @@ export default function Dashboard() {
   const [updatingTaskId, setUpdatingTaskId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<DraggedTask | null>(null);
-  const [token, setToken] = useState<JwtPayload>();
+  const [decoded_token, setDecodedToken] = useState<JwtPayload>();
 
   const [newTask, setNewTask] = useState({
     task_name: "",
@@ -62,27 +63,6 @@ export default function Dashboard() {
     0,
   );
   const completedTasks = tasks["done"].length;
-
-  useEffect(() => {
-    const loadTasks = async () => {
-      setLoading(true);
-      try {
-        if (!access_token) return;
-
-        const response = await fetchTasks(access_token);
-        const organized = organizeTasks(response.data);
-        setTasks(organized);
-      } catch (error) {
-        console.error("Erro ao carregar tarefas:", error);
-        toast.error("Erro ao carregar tarefas");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadTasks();
-  }, [access_token]);
-
   useEffect(() => {
     const loadCredentials = async () => {
       try {
@@ -90,9 +70,7 @@ export default function Dashboard() {
 
         if (!jwt_token) {
           const response = await fetchRefresh().catch((err) => {
-            if (err.response?.status === 401) {
-              return null;
-            }
+            if (err.response?.status === 401) return null;
             throw err;
           });
 
@@ -107,16 +85,38 @@ export default function Dashboard() {
 
         if (jwt_token) {
           const decoded = jwtDecode<JwtPayload>(jwt_token);
-          setToken(decoded);
+          setDecodedToken(decoded); // Seta antes de carregar tasks
         }
       } catch (error) {
-        console.error("Erro real ao carregar credenciais:", error);
+        console.error("Erro ao carregar credenciais:", error);
         setAccess_token(null);
       }
     };
 
     loadCredentials();
   }, []);
+  useEffect(() => {
+    if (!decoded_token?.sub || !access_token) return;
+
+    const loadTasks = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchTasksByUser(
+          Number(decoded_token.sub),
+          access_token,
+        );
+        const organized = organizeTasks(response.data);
+        setTasks(organized);
+      } catch (error) {
+        console.error("Erro ao carregar tarefas:", error);
+        toast.error("Erro ao carregar tarefas");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, [decoded_token, access_token]);
   const handleAddTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -125,7 +125,7 @@ export default function Dashboard() {
       return;
     }
 
-    if (!token) {
+    if (!decoded_token) {
       toast.error("Usuário não autenticado");
       return;
     }
@@ -134,7 +134,7 @@ export default function Dashboard() {
       const payload = {
         task_name: newTask.task_name,
         description: newTask.description,
-        userId: token.sub,
+        userId: decoded_token.sub,
       };
 
       const response = await fetchAddTask(payload, access_token);

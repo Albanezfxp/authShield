@@ -11,6 +11,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { registerUserDto } from './dto/register-user.dto';
 import { compare, hash } from 'bcrypt';
 import { $Enums } from '@prisma/client';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class UserService {

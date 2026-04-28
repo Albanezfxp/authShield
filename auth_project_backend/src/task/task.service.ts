@@ -12,6 +12,22 @@ export class TaskService {
     return this.prisma.task.findMany();
   }
 
+  async findAllTaskByUser(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new HttpException('Usuario não encontrado', 404);
+    }
+
+    const tasks = await this.prisma.task.findMany({
+      where: { userId: user.id },
+    });
+
+    return tasks;
+  }
+
   async findById(id: number) {
     const task = await this.prisma.task.findUnique({
       where: { id },

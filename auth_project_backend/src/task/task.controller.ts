@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
@@ -23,6 +24,12 @@ export class TaskController {
   @Get()
   findAll() {
     return this.taskService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/byUser/:id')
+  async findAllTasksByUser(@Param('id', ParseIntPipe) id: number) {
+    return this.taskService.findAllTaskByUser(id);
   }
 
   @UseGuards(JwtAuthGuard)

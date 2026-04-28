@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 270104
+      POSTGRES_DB: db_project_auth
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./auth_project_backend
+      dockerfile: Dockerfile.backend # ✅ AQUI
+    container_name: nest_backend
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "3333:3333"
+    environment:
+      DATABASE_URL: postgresql://postgres:270104@postgres:5432/db_project_auth
+      SECRET_KEY: 0ab3500c9ee5a3ea09234338ff0a023b55ac904270ceef5c67e7d9b70380d824
+      REFRESH_TOKEN_KEY: 0ab3500c9ee5a3ea09234338ff0a023b55a87465311465132646531459465
+
+  frontend:
+    build:
+      context: ./auth_project_frontend
+      dockerfile: Dockerfile.frontend # ✅ AQUI
+    container_name: react_frontend
+    restart: always
+    ports:
+      - "5173:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
