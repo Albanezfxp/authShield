@@ -3,24 +3,6 @@
 
 > Uma aplicação **web** para gerenciamento de tarefas em estilo **Kanban**, construída para demonstrar na prática conceitos de **DevOps**, **containerização**, **CI/CD** e **qualidade de código**.
 
----
-
-## Sumário
-- [Visão Geral](#visão-geral)
-- [Objetivos](#objetivos)
-- [Funcionalidades](#funcionalidades)
-- [Arquitetura](#arquitetura)
-- [Tecnologias](#tecnologias)
-- [Versionamento (GitFlow)](#versionamento-gitflow)
-- [Como Executar (Docker)](#como-executar-docker)
-- [CI/CD com Jenkins](#cicd-com-jenkins)
-- [Qualidade com SonarQube](#qualidade-com-sonarqube)
-- [Repositório](#repositório)
-- [Integrantes](#integrantes)
-- [Considerações Finais](#considerações-finais)
-
----
-
 ## Visão Geral
 O **AuthShield** é um **Task Manager** simples e funcional com autenticação, pensado para organizar tarefas do dia a dia com uma interface **Kanban** (criar, visualizar, mover/editar e remover).
 
