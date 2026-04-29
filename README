@@ -1,73 +1,91 @@
-# README.md – Projeto Final da Disciplina de DevOps
+````markdown name=README.md
+# AuthShield — Task Manager Kanban (Projeto Final • DevOps)
 
-# Projeto Final – Disciplina de DevOps
-
-## 1. Visão Geral do Projeto
-
-O projeto consiste em uma aplicação web para gerenciamento de tarefas (Task Manager), desenvolvida com foco na aplicação prática dos conceitos de DevOps estudados ao longo da disciplina.
-
-A solução permite que usuários realizem autenticação e gerenciamento de tarefas em formato Kanban, incluindo criação, listagem, edição e remoção de tarefas.
+> Uma aplicação **web** para gerenciamento de tarefas em estilo **Kanban**, construída para demonstrar na prática conceitos de **DevOps**, **containerização**, **CI/CD** e **qualidade de código**.
 
 ---
 
-## 2. Objetivo da Aplicação
-
-O objetivo do sistema é fornecer uma ferramenta simples e funcional para organização de tarefas, ao mesmo tempo em que demonstra a aplicação de boas práticas de desenvolvimento moderno, incluindo:
-
-- Versionamento de código com Git
-- Uso de GitFlow para organização de branches
-- Containerização com Docker
-- Orquestração de serviços com Docker Compose
-- Integração contínua com Jenkins
-- Análise de qualidade de código com SonarQube
-
----
-
-## 3. Arquitetura do Sistema
-
-O sistema é dividido em três camadas principais:
-
-### Front-end
-
-- Desenvolvido em React + TypeScript
-- Interface Kanban para gerenciamento de tarefas
-- Consumo de API via Axios
-- Autenticação via JWT
-
-### Back-end
-
-- Desenvolvido em NestJS
-- API RESTful
-- Autenticação JWT
-- Prisma ORM para acesso ao banco de dados
-
-### Banco de Dados
-
-- PostgreSQL
-- Gerenciado via Prisma
+## Sumário
+- [Visão Geral](#visão-geral)
+- [Objetivos](#objetivos)
+- [Funcionalidades](#funcionalidades)
+- [Arquitetura](#arquitetura)
+- [Tecnologias](#tecnologias)
+- [Versionamento (GitFlow)](#versionamento-gitflow)
+- [Como Executar (Docker)](#como-executar-docker)
+- [CI/CD com Jenkins](#cicd-com-jenkins)
+- [Qualidade com SonarQube](#qualidade-com-sonarqube)
+- [Repositório](#repositório)
+- [Integrantes](#integrantes)
+- [Considerações Finais](#considerações-finais)
 
 ---
 
-## 4. Funcionalidades (CRUD)
+## Visão Geral
+O **AuthShield** é um **Task Manager** simples e funcional com autenticação, pensado para organizar tarefas do dia a dia com uma interface **Kanban** (criar, visualizar, mover/editar e remover).
 
-O sistema possui um CRUD completo de tarefas:
+O projeto foi desenvolvido como **trabalho final da disciplina de DevOps**, priorizando:
+- organização do repositório e fluxo de branches
+- execução padronizada com containers
+- automação via pipeline
+- observabilidade da qualidade do código
 
+---
+
+## Objetivos
+- Aplicar conceitos estudados em DevOps em uma aplicação real.
+- Demonstrar boas práticas de desenvolvimento moderno:
+  - versionamento com **Git**
+  - **GitFlow**
+  - **Docker** e **Docker Compose**
+  - **Integração Contínua** com **Jenkins**
+  - **Qualidade de Código** com **SonarQube**
+
+---
+
+## Funcionalidades
+
+### Autenticação (JWT)
+- Registro de usuário
+- Login com **JWT**
+
+### Tarefas (CRUD completo)
 - Criar tarefa
 - Listar tarefas
 - Atualizar tarefa
 - Remover tarefa
 
-Além disso, o sistema conta com autenticação de usuários:
-
-- Registro de usuário
-- Login com JWT
+> A interface é organizada em formato **Kanban**, focada em clareza e praticidade.
 
 ---
 
-## 5. Tecnologias Utilizadas
+## Arquitetura
+A solução é dividida em três camadas:
 
 ### Front-end
+- **React + TypeScript**
+- Interface Kanban
+- Consumo de API via **Axios**
+- Rotas com **React Router**
+- Notificações com **React Toastify**
+- Autenticação baseada em **JWT**
 
+### Back-end
+- **NestJS**
+- API **RESTful**
+- Autenticação via **JWT**
+- **Prisma ORM** para persistência
+- Hash de senha com **Bcrypt**
+
+### Banco de Dados
+- **PostgreSQL**
+- Gerenciado via **Prisma**
+
+---
+
+## Tecnologias
+
+### Front-end
 - React
 - TypeScript
 - Axios
@@ -75,7 +93,6 @@ Além disso, o sistema conta com autenticação de usuários:
 - React Toastify
 
 ### Back-end
-
 - NestJS
 - Prisma ORM
 - PostgreSQL
@@ -83,86 +100,80 @@ Além disso, o sistema conta com autenticação de usuários:
 - Bcrypt
 
 ### DevOps
-
 - Docker
 - Docker Compose
 - GitHub
-- Jenkins (pipeline CI)
-- SonarQube (análise de qualidade)
+- Jenkins (CI)
+- SonarQube (Qualidade)
 - GitFlow
 
 ---
 
-## 6. Estrutura de Versionamento (GitFlow)
+## Versionamento (GitFlow)
+O projeto segue o padrão **GitFlow**:
 
-O projeto segue o padrão GitFlow:
-
-- main: versão estável
-- develop: desenvolvimento
-- feature/\*: novas funcionalidades
-- hotfix/\*: correções urgentes
+- `main`: versão estável
+- `develop`: linha principal de desenvolvimento
+- `feature/*`: novas funcionalidades
+- `hotfix/*`: correções urgentes
 
 ---
 
-## 7. Execução do Projeto
+## Como Executar (Docker)
 
 ### Pré-requisitos
-
 - Docker
 - Docker Compose
 
-### Execução
-
+### Subindo o ambiente
 ```bash
 docker compose up --build
 ```
 
-O sistema será iniciado com:
-
+Isso iniciará:
 - Front-end
 - Back-end
-- Banco de dados PostgreSQL
+- Banco de Dados (PostgreSQL)
 
 ---
 
-## 8. Pipeline CI/CD (Jenkins)
+## CI/CD com Jenkins
+A pipeline contempla:
 
-A pipeline implementada contempla:
-
-1. Clone do repositório
-2. Instalação de dependências
-3. Build do projeto
-4. Execução de análise de qualidade (SonarQube)
+1. **Clone** do repositório
+2. **Instalação** de dependências
+3. **Build** do projeto
+4. **Análise de qualidade** com SonarQube
 
 ---
 
-## 9. Qualidade de Código (SonarQube)
-
-O projeto possui integração com SonarQube para análise de:
+## Qualidade com SonarQube
+O projeto integra **SonarQube** para analisar:
 
 - Code Smells
 - Bugs
 - Vulnerabilidades
 - Cobertura de código
 
-O objetivo é manter o Quality Gate aprovado durante a execução da pipeline.
+O foco é manter o **Quality Gate aprovado** durante a execução da pipeline.
 
 ---
 
-## 10. Repositório
-
-O projeto está hospedado no GitHub e organizado seguindo boas práticas de versionamento e colaboração em equipe.
-
----
-
-## 11. Integrantes da Equipe
-
-- Gabriel Albanez
+## Repositório
+O projeto está hospedado no GitHub e segue boas práticas de organização e colaboração.
 
 ---
 
-## 12. Considerações Finais
+## Integrantes
+- **Gabriel Albanez**
 
-Este projeto foi desenvolvido com foco na aplicação prática dos conceitos de DevOps, priorizando organização, automação, containerização e qualidade de software.
+---
 
-O escopo da aplicação foi mantido propositalmente simples para garantir foco na infraestrutura, pipelines e boas práticas de desenvolvimento.
+## Considerações Finais
+Este projeto foi desenvolvido com foco em **prática e consistência**: automação, containerização e qualidade de software.
+
+O escopo foi mantido propositalmente simples para garantir maior ênfase em:
+- infraestrutura
+- pipelines
+- boas práticas DevOps
+````
