@@ -1,0 +1,168 @@
+# README.md – Projeto Final da Disciplina de DevOps
+
+# Projeto Final – Disciplina de DevOps
+
+## 1. Visão Geral do Projeto
+
+O projeto consiste em uma aplicação web para gerenciamento de tarefas (Task Manager), desenvolvida com foco na aplicação prática dos conceitos de DevOps estudados ao longo da disciplina.
+
+A solução permite que usuários realizem autenticação e gerenciamento de tarefas em formato Kanban, incluindo criação, listagem, edição e remoção de tarefas.
+
+---
+
+## 2. Objetivo da Aplicação
+
+O objetivo do sistema é fornecer uma ferramenta simples e funcional para organização de tarefas, ao mesmo tempo em que demonstra a aplicação de boas práticas de desenvolvimento moderno, incluindo:
+
+- Versionamento de código com Git
+- Uso de GitFlow para organização de branches
+- Containerização com Docker
+- Orquestração de serviços com Docker Compose
+- Integração contínua com Jenkins
+- Análise de qualidade de código com SonarQube
+
+---
+
+## 3. Arquitetura do Sistema
+
+O sistema é dividido em três camadas principais:
+
+### Front-end
+
+- Desenvolvido em React + TypeScript
+- Interface Kanban para gerenciamento de tarefas
+- Consumo de API via Axios
+- Autenticação via JWT
+
+### Back-end
+
+- Desenvolvido em NestJS
+- API RESTful
+- Autenticação JWT
+- Prisma ORM para acesso ao banco de dados
+
+### Banco de Dados
+
+- PostgreSQL
+- Gerenciado via Prisma
+
+---
+
+## 4. Funcionalidades (CRUD)
+
+O sistema possui um CRUD completo de tarefas:
+
+- Criar tarefa
+- Listar tarefas
+- Atualizar tarefa
+- Remover tarefa
+
+Além disso, o sistema conta com autenticação de usuários:
+
+- Registro de usuário
+- Login com JWT
+
+---
+
+## 5. Tecnologias Utilizadas
+
+### Front-end
+
+- React
+- TypeScript
+- Axios
+- React Router
+- React Toastify
+
+### Back-end
+
+- NestJS
+- Prisma ORM
+- PostgreSQL
+- JWT (JSON Web Token)
+- Bcrypt
+
+### DevOps
+
+- Docker
+- Docker Compose
+- GitHub
+- Jenkins (pipeline CI)
+- SonarQube (análise de qualidade)
+- GitFlow
+
+---
+
+## 6. Estrutura de Versionamento (GitFlow)
+
+O projeto segue o padrão GitFlow:
+
+- main: versão estável
+- develop: desenvolvimento
+- feature/\*: novas funcionalidades
+- hotfix/\*: correções urgentes
+
+---
+
+## 7. Execução do Projeto
+
+### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+### Execução
+
+```bash
+docker compose up --build
+```
+
+O sistema será iniciado com:
+
+- Front-end
+- Back-end
+- Banco de dados PostgreSQL
+
+---
+
+## 8. Pipeline CI/CD (Jenkins)
+
+A pipeline implementada contempla:
+
+1. Clone do repositório
+2. Instalação de dependências
+3. Build do projeto
+4. Execução de análise de qualidade (SonarQube)
+
+---
+
+## 9. Qualidade de Código (SonarQube)
+
+O projeto possui integração com SonarQube para análise de:
+
+- Code Smells
+- Bugs
+- Vulnerabilidades
+- Cobertura de código
+
+O objetivo é manter o Quality Gate aprovado durante a execução da pipeline.
+
+---
+
+## 10. Repositório
+
+O projeto está hospedado no GitHub e organizado seguindo boas práticas de versionamento e colaboração em equipe.
+
+---
+
+## 11. Integrantes da Equipe
+
+- Gabriel Albanez
+
+---
+
+## 12. Considerações Finais
+
+Este projeto foi desenvolvido com foco na aplicação prática dos conceitos de DevOps, priorizando organização, automação, containerização e qualidade de software.
+
+O escopo da aplicação foi mantido propositalmente simples para garantir foco na infraestrutura, pipelines e boas práticas de desenvolvimento.
