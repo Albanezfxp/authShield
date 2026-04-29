@@ -18,7 +18,7 @@ import type { Response, Request } from 'express';
 import { loginUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwtAuthGuard';
 import { Roles } from 'src/types/decoratores/role.decorator';
-import { role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import { RolesGuard } from './guards/role.guards';
 import { registerUserDto } from './dto/register-user.dto';
 import { AuthService } from 'src/auth/auth.service';
@@ -69,7 +69,7 @@ export class UserController {
     return this.authService.refresh(refreshToken);
   }
 
-  @Roles(role.ADMIN)
+  @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async findAll() {
@@ -78,21 +78,21 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
-  @Roles(role.ADMIN)
+  @Roles(Role.ADMIN)
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
-  @Roles(role.ADMIN)
+  @Roles(Role.ADMIN)
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
-  @Roles(role.ADMIN)
+  @Roles(Role.ADMIN)
   async remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }

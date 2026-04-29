@@ -45,7 +45,7 @@ export class UserService {
       name: user.name,
       email: user.email,
       password: hashPassword,
-      role: user.role as unknown as $Enums.role,
+      role: user.role as unknown as $Enums.Role,
     };
 
     return await this.prisma.user.create({

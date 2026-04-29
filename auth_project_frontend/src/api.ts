@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import type { CreateTaskInterface } from "./types/interfaces/create_task.interface";
 
 const api = axios.create({
-  baseURL: "http://backend:3333",
+  baseURL: "http://localhost:3333",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

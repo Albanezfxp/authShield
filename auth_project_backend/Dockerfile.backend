@@ -6,9 +6,17 @@ RUN apk add --no-cache dumb-init
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm config set fetch-retry-maxtimeout 600000 \
+ && npm config set fetch-retries 5 \
+ && npm config set registry https://registry.npmjs.org/
+
+RUN npm install --legacy-peer-deps
 
 COPY . .
+
+COPY wait-for-db.sh .
+RUN chmod +x wait-for-db.sh
+RUN apk add --no-cache dumb-init bash netcat-openbsd
 
 RUN npx prisma generate
 RUN npm run build
@@ -17,4 +25,4 @@ EXPOSE 3333
 
 ENTRYPOINT ["dumb-init", "--"]
 
-CMD ["node", "dist/src/main.js"]
+CMD ["sh", "-c", "./wait-for-db.sh && npx prisma migrate deploy && node -r tsconfig-paths/register dist/main.js"]

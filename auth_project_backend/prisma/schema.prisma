@@ -6,12 +6,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-enum role {
+enum Role {
   ADMIN
   USER
 }
 
-enum situation {
+enum Situation {
   TO_DO
   IN_PROGRESS
   DONE
@@ -24,14 +24,14 @@ model User {
   name String
   tasks Task[]
   refreshToken String?
-  role role @default(USER) 
+  role Role @default(USER) 
 }
 
 model Task {
   id Int @default(autoincrement()) @id
   task_name String
   description String
-  situation situation @default(TO_DO)
+  situation Situation @default(TO_DO)
   userId Int
   user User @relation(fields: [userId], references: [id])
 }

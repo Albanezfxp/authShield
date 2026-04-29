@@ -5,8 +5,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { role } from 'src/types/enums/role.enum';
-
+import { Role } from '@prisma/client';
 export class registerUserDto {
   @IsString()
   @IsEmail()
@@ -23,6 +22,6 @@ export class registerUserDto {
   @IsNotEmpty()
   @IsString()
   name!: string;
-  @IsEnum(role)
-  role!: role;
+  @IsEnum(Role)
+  role!: Role;
 }

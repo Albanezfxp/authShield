@@ -2,7 +2,7 @@ import { HttpException, Injectable, Req } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task-dto';
 import { UpdateTaskDto } from './dto/update-task-dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { situation } from '@prisma/client';
+import { Situation } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
@@ -53,7 +53,7 @@ export class TaskService {
       data: {
         task_name: createTaskDto.task_name,
         description: createTaskDto.description,
-        situation: situation.TO_DO,
+        situation: Situation.TO_DO,
         userId: user.id,
       },
     });

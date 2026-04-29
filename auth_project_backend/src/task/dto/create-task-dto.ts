@@ -1,3 +1,4 @@
+import { Situation } from '@prisma/client';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -6,19 +7,13 @@ import {
   IsString,
 } from 'class-validator';
 
-export enum situation {
-  TO_DO,
-  IN_PROGRESS,
-  DONE,
-}
-
 export class CreateTaskDto {
   @IsString()
   @IsNotEmpty()
   task_name!: string;
   @IsNotEmpty()
   @IsOptional()
-  situation!: situation;
+  situation!: Situation;
   @IsString()
   description!: string;
   @IsNumber()

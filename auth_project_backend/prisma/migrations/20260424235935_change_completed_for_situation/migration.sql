@@ -6,4 +6,4 @@
 */
 -- AlterTable
 ALTER TABLE "Task" DROP COLUMN "completed",
-ADD COLUMN     "situation" "situation" NOT NULL DEFAULT 'TO_DO';
+ADD COLUMN     "situation" "Situation" NOT NULL DEFAULT 'TO_DO';

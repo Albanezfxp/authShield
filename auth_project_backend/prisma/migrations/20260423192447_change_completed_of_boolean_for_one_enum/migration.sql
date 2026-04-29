@@ -5,8 +5,8 @@
 
 */
 -- CreateEnum
-CREATE TYPE "situation" AS ENUM ('TO_DO', 'IN_PROGRESS', 'DONE');
+CREATE TYPE "Situation" AS ENUM ('TO_DO', 'IN_PROGRESS', 'DONE');
 
 -- AlterTable
 ALTER TABLE "Task" DROP COLUMN "completed",
-ADD COLUMN     "completed" "situation" NOT NULL DEFAULT 'TO_DO';
+ADD COLUMN     "completed" "Situation" NOT NULL DEFAULT 'TO_DO';
