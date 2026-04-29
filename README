@@ -1,5 +1,5 @@
-````markdown name=README.md
-# AuthShield — Task Manager Kanban (Projeto Final • DevOps)
+
+# TaskFlow — Task Manager Kanban (Projeto Final • DevOps)
 
 > Uma aplicação **web** para gerenciamento de tarefas em estilo **Kanban**, construída para demonstrar na prática conceitos de **DevOps**, **containerização**, **CI/CD** e **qualidade de código**.
 
