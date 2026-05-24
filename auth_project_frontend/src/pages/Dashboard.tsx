@@ -352,7 +352,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="empty-state">
                     <Circle size={32} strokeWidth={1} />
-                    <p>Nenhuma tarefa aqui</p>
+                    <p>Nenhuma aqui</p>
                     <p style={{ fontSize: "0.8rem", opacity: 0.7 }}>
                       Arraste tarefas ou crie uma nova
                     </p>

@@ -15,9 +15,12 @@ services:
   backend:
     build:
       context: ./auth_project_backend
-      dockerfile: Dockerfile.backend # ✅ AQUI
+      dockerfile: Dockerfile.backend
     container_name: nest_backend
-    restart: always
+    restart: unless-stopped
+    volumes:
+      - ./auth_project_backend:/app
+      - /app/node_modules
     depends_on:
       - postgres
     ports:
@@ -26,17 +29,23 @@ services:
       DATABASE_URL: postgresql://postgres:270104@postgres:5432/db_project_auth
       SECRET_KEY: 0ab3500c9ee5a3ea09234338ff0a023b55ac904270ceef5c67e7d9b70380d824
       REFRESH_TOKEN_KEY: 0ab3500c9ee5a3ea09234338ff0a023b55a87465311465132646531459465
+      NODE_ENV: development
 
   frontend:
     build:
       context: ./auth_project_frontend
-      dockerfile: Dockerfile.frontend # ✅ AQUI
+      dockerfile: Dockerfile.frontend
     container_name: react_frontend
-    restart: always
-    ports:
-      - "5173:3000"
+    restart: unless-stopped
+    volumes:
+      - ./auth_project_frontend:/app
+      - /app/node_modules
     depends_on:
       - backend
+    ports:
+      - "5173:5173"
+    environment: # ✅ CORRETO - alinhado com ports
+      VITE_API_URL: http://localhost:3333
 
 volumes:
   postgres_data:
