@@ -2,12 +2,12 @@ name: CI/CD Pipeline - Build, Test & Code Quality
 
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [main, develop, feature/*]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: "20"
 
 jobs:
   # Job 1: Build Backend
@@ -23,8 +23,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: 'auth_project_backend/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "auth_project_backend/package-lock.json"
 
       - name: 📚 Install dependencies
         run: cd auth_project_backend && npm ci
@@ -52,8 +52,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: 'auth_project_frontend/package-lock.json'
+          cache: "npm"
+          cache-dependency-path: "auth_project_frontend/package-lock.json"
 
       - name: 📚 Install dependencies
         run: cd auth_project_frontend && npm ci
@@ -104,7 +104,7 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better analysis
+          fetch-depth: 0 # Shallow clones should be disabled for better analysis
 
       - name: 📦 Setup Node.js
         uses: actions/setup-node@v3
