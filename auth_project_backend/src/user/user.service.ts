@@ -6,17 +6,17 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { loginUserDto } from './dto/login-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
-import { registerUserDto } from './dto/register-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 import { compare, hash } from 'bcrypt';
 import { $Enums } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaService,
-    private authService: AuthService,
+    private readonly prisma: PrismaService,
+    private readonly authService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -25,7 +25,7 @@ export class UserService {
     });
   }
 
-  async register(user: registerUserDto) {
+  async register(user: RegisterUserDto) {
     const userExist = await this.prisma.user.findUnique({
       where: { email: user.email },
     });
@@ -44,7 +44,7 @@ export class UserService {
       name: user.name,
       email: user.email,
       password: hashPassword,
-      role: user.role as unknown as $Enums.Role,
+      role: user.role as $Enums.Role,
     };
 
     return await this.prisma.user.create({
@@ -52,7 +52,7 @@ export class UserService {
     });
   }
 
-  async login(user: loginUserDto) {
+  async login(user: LoginUserDto) {
     const user_bd = await this.prisma.user.findUnique({
       where: { email: user.email },
     });

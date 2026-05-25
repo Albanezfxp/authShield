@@ -13,9 +13,10 @@ export default function Login() {
     email: "",
     password: "",
   });
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData((prev: loginRequest) => ({
       ...prev,
       [name]: value,
     }));
@@ -31,7 +32,6 @@ export default function Login() {
       };
 
       const response = await fetchLogin(payload);
-      console.log("TOKEN:", response.data.access_token);
 
       if (!response.data?.access_token) {
         throw new Error("Credenciais inválidas");
@@ -42,62 +42,67 @@ export default function Login() {
       auth.setAccess_token(response.data.access_token);
 
       navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error("Credenciais inválidas!");
     }
   };
 
+  const handleForgotPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    toast.info("Funcionalidade em desenvolvimento");
+  };
+
   return (
-    <>
-      <AuthLayout
-        title={"Bem-vindo de volta"}
-        text={"Faça login para acessar suas tarefas"}
-        login={true}
-        children={
-          <form onSubmit={handleSubmit} className="loginForm">
-            <div className="formGroup">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="seu@email.com"
-                value={formData?.email || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+    <AuthLayout
+      title="Bem-vindo de volta"
+      text="Faça login para acessar suas tarefas"
+      login={true}
+    >
+      <form onSubmit={handleSubmit} className="loginForm">
+        <div className="formGroup">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="seu@email.com"
+            value={formData?.email || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-            <div className="formGroup">
-              <label htmlFor="password">Senha</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData?.password || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+        <div className="formGroup">
+          <label htmlFor="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            value={formData?.password || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-            <div className="formFooter">
-              <label className="rememberMe">
-                <input type="checkbox" />
-                <span>Lembrar-me</span>
-              </label>
-              <a href="#" className="forgotPassword">
-                Esqueci a senha
-              </a>
-            </div>
+        <div className="formFooter">
+          <label className="rememberMe">
+            <input type="checkbox" />
+            <span>Lembrar-me</span>
+          </label>
+          <button
+            type="button"
+            className="forgotPassword"
+            onClick={handleForgotPassword}
+          >
+            Esqueci a senha
+          </button>
+        </div>
 
-            <button type="submit" className="submitBtn">
-              Entrar
-            </button>
-          </form>
-        }
-      />
-    </>
+        <button type="submit" className="submitBtn">
+          Entrar
+        </button>
+      </form>
+    </AuthLayout>
   );
 }

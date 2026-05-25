@@ -1,22 +1,21 @@
-import type { JSX } from "react";
+import type { ReactNode } from "react";
 
-interface featureCardProps {
-  feature: {
-    icon: JSX.Element;
-    title: string;
-    description: string;
+// ✅ PascalCase + readonly
+interface FeatureCardProps {
+  readonly feature: {
+    readonly id: string;
+    readonly icon: ReactNode;
+    readonly title: string;
+    readonly description: string;
   };
-  index: number;
 }
 
-export default function FeatureCard(props: featureCardProps) {
+export default function FeatureCard({ feature }: Readonly<FeatureCardProps>) {
   return (
-    <>
-      <div key={props.index} className="featureCard">
-        <div className="featureIcon">{props.feature.icon}</div>
-        <h3>{props.feature.title}</h3>
-        <p>{props.feature.description}</p>
-      </div>
-    </>
+    <div className="feature-card">
+      <div className="feature-icon">{feature.icon}</div>
+      <h3 className="feature-title">{feature.title}</h3>
+      <p className="feature-description">{feature.description}</p>
+    </div>
   );
 }

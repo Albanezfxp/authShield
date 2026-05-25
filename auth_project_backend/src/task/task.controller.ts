@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwtAuthGuard';
 
 @Controller('task')
 export class TaskController {
-  constructor(private taskService: TaskService) {}
+  constructor(private readonly taskService: TaskService) {}
 
   @Get()
   findAll() {

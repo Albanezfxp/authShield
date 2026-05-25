@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Role } from '@prisma/client';
-export class registerUserDto {
+export class RegisterUserDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()

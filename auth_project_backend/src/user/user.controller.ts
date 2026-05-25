@@ -15,12 +15,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Response, Request } from 'express';
-import { loginUserDto } from './dto/login-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwtAuthGuard';
 import { Roles } from 'src/types/decoratores/role.decorator';
 import { Role } from '@prisma/client';
 import { RolesGuard } from './guards/role.guards';
-import { registerUserDto } from './dto/register-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 
 // ✅ INTERFACE CORRIGIDA
@@ -44,13 +44,13 @@ export class UserController {
   }
 
   @Post('/register')
-  async register(@Body() user: registerUserDto) {
+  async register(@Body() user: RegisterUserDto) {
     return this.userService.register(user);
   }
 
   @Post('login')
   async login(
-    @Body() user: loginUserDto,
+    @Body() user: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { refresh_token, access_token } = await this.userService.login(user);

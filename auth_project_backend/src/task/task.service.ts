@@ -6,7 +6,7 @@ import { Situation } from '@prisma/client';
 
 @Injectable()
 export class TaskService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     return this.prisma.task.findMany();

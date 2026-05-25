@@ -12,7 +12,7 @@ type jwtPayload = {
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private generateAccessToken(payload: jwtPayload) {
     return jwt.sign(payload, process.env.SECRET_KEY!, {
@@ -43,7 +43,7 @@ export class AuthService {
     try {
       const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY!);
 
-      const userId = decoded.sub;
+      const userId = decoded?.sub; // ✅ ADICIONADO optional chaining
 
       if (!userId) {
         throw new HttpException('Invalid token', 403);
@@ -70,7 +70,6 @@ export class AuthService {
       };
 
       const tokens = this.login({
-        // ✅ Não precisa await agora
         id: payload.sub,
         email: payload.email,
         role: payload.role,

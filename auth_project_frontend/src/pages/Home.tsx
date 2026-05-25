@@ -17,20 +17,24 @@ export default function Home() {
     navigate("/login");
   };
 
+  // ✅ ADICIONAR IDs únicos
   const features = [
     {
+      id: "organization",
       icon: <CheckCircle size={32} />,
       title: "Organização Visual",
       description:
         "Organize suas tarefas em colunas e acompanhe o progresso com facilidade.",
     },
     {
+      id: "productivity",
       icon: <Zap size={32} />,
       title: "Produtividade em Foco",
       description:
         "Interface intuitiva que deixa você concentrado no que importa.",
     },
     {
+      id: "progress",
       icon: <BarChart3 size={32} />,
       title: "Acompanhe o Progresso",
       description:
@@ -68,7 +72,7 @@ export default function Home() {
             <div className="socialProof">
               <div className="avatars">
                 {[1, 2, 3].map((i) => (
-                  <div key={i}>
+                  <div key={`avatar-${i}`}>
                     {" "}
                     <UserCheck2 size={32} />
                   </div>
@@ -118,8 +122,8 @@ export default function Home() {
         </div>
 
         <div className="featureGrid">
-          {features.map((feature, index) => (
-            <FeatureCard feature={feature} index={index} />
+          {features.map((feature) => (
+            <FeatureCard key={feature.id} feature={feature} />
           ))}
         </div>
       </section>
