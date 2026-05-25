@@ -10,7 +10,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { compare, hash } from 'bcrypt';
-import { $Enums } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -44,7 +43,7 @@ export class UserService {
       name: user.name,
       email: user.email,
       password: hashPassword,
-      role: user.role as $Enums.Role,
+      role: user.role,
     };
 
     return await this.prisma.user.create({
