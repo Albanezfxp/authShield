@@ -2,21 +2,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchLogin } from "../api";
 import { toast } from "react-toastify";
-import type { loginRequest } from "../types/interfaces/login_request.interface";
+import type { LoginRequest } from "../types/interfaces/login_request.interface";
 import AuthLayout from "../components/_shared_/AuthLayout";
 import { useAuth } from "../commons/hooks/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
   const auth = useAuth();
-  const [formData, setFormData] = useState<loginRequest>({
+  const [formData, setFormData] = useState<LoginRequest>({
     email: "",
     password: "",
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: loginRequest) => ({
+    setFormData((prev: LoginRequest) => ({
       ...prev,
       [name]: value,
     }));

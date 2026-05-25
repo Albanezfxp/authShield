@@ -1,12 +1,12 @@
 import { useState } from "react";
 import AuthLayout from "../components/_shared_/AuthLayout";
-import type { registerRequest } from "../types/interfaces/register_request";
+import type { RegisterRequest } from "../types/interfaces/register_request";
 import { fetchRegister } from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const [formData, setFormData] = useState<registerRequest>({
+  const [formData, setFormData] = useState<RegisterRequest>({
     email: "",
     password: "",
     confirm_password: "",
@@ -16,7 +16,7 @@ export default function Register() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev: registerRequest) => ({
+    setFormData((prev: RegisterRequest) => ({
       ...prev,
       [name]: value,
     }));
