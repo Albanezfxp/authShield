@@ -245,7 +245,7 @@ export default function Dashboard() {
           ? Situation.IN_PROGRESS
           : Situation.DONE;
 
-      await fetchUpdateTask(task.id, { situation: newSituation }, access_token);
+      await fetchUpdateTask(task.id, newSituation, access_token);
     } catch (error) {
       console.error("Erro ao atualizar tarefa:", error);
       toast.error("Erro ao mover tarefa");
