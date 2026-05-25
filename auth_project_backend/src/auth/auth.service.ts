@@ -43,8 +43,7 @@ export class AuthService {
     try {
       const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY!);
 
-      const userId = decoded?.sub; // ✅ ADICIONADO optional chaining
-
+      const userId = decoded?.sub;
       if (!userId) {
         throw new HttpException('Invalid token', 403);
       }

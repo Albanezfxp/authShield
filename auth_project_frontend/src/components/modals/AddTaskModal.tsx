@@ -7,13 +7,30 @@ export default function AddTaskModal({
   handleAddTask,
   newTask,
   setNewTask,
-}: AddTaskModalProps) {
+}: Readonly<AddTaskModalProps>) {
+  const handleOverlayClick = () => setShowModal(false);
+
+  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
+  const handleCloseKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      setShowModal(false);
+    }
+  };
+
   return (
-    <div className="modal-overlay" onClick={() => setShowModal(false)}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="modal-overlay"
+      onClick={handleOverlayClick}
+      role="presentation"
+    >
+      <div className="modal" onClick={handleModalClick} role="dialog">
         <button
           className="close-btn"
           onClick={() => setShowModal(false)}
+          onKeyDown={handleCloseKeyDown}
           aria-label="Fechar modal"
         >
           ✕
