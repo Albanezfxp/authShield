@@ -3,6 +3,7 @@ import type { registerRequest } from "./types/interfaces/register_request";
 import type { loginRequest } from "./types/interfaces/login_request.interface";
 import { toast } from "react-toastify";
 import type { CreateTaskInterface } from "./types/interfaces/create_task.interface";
+import type { Situation } from "./types/enums/situation.enum";
 
 const api = axios.create({
   baseURL: "http://localhost:3333",
@@ -60,7 +61,7 @@ export const fetchRegister = async (payload: registerRequest) => {
 
 export const fetchAddTask = async (
   payload: CreateTaskInterface,
-  token: any,
+  token: string | null,
 ) => {
   const resposne = await api.post(`/task`, payload, {
     headers: { Authorization: `Bearer ${token}` },
@@ -68,14 +69,14 @@ export const fetchAddTask = async (
   return resposne;
 };
 
-export const fetchTasks = async (token: any) => {
+export const fetchTasks = async (token: string | null) => {
   const response = await api.get("/task", {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response;
 };
 
-export const fetchTasksByUser = async (id: number, token: any) => {
+export const fetchTasksByUser = async (id: number, token: string | null) => {
   const response = await api.get(`/task/byUser/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -83,8 +84,8 @@ export const fetchTasksByUser = async (id: number, token: any) => {
 };
 
 export const fetchUpdateTask = async (
-  taskId: any,
-  newState: any,
+  taskId: string,
+  newState: Situation,
   token: string,
 ) => {
   const response = await api.put(`/task/${+taskId}`, newState, {
@@ -93,7 +94,7 @@ export const fetchUpdateTask = async (
   return response;
 };
 
-export const fetchDeleteTask = async (taskId: any, token: any) => {
+export const fetchDeleteTask = async (taskId: string, token: string | null) => {
   try {
     const response = await api.delete(`/task/${+taskId}`, {
       headers: { Authorization: `Bearer ${token}` },

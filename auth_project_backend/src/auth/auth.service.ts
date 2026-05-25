@@ -1,4 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { $Enums } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -24,7 +25,7 @@ export class AuthService {
     });
   }
 
-  async login(user: any) {
+  async login(user: { id: number; email: string; role: $Enums.Role }) {
     const payload = {
       sub: user.id,
       email: user.email,
@@ -39,10 +40,7 @@ export class AuthService {
 
   async refresh(refresh_token: string) {
     try {
-      const decoded: any = jwt.verify(
-        refresh_token,
-        process.env.REFRESH_TOKEN_KEY!,
-      );
+      const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY!);
 
       const userId = decoded.sub;
 
@@ -70,7 +68,11 @@ export class AuthService {
         role: user.role,
       };
 
-      const tokens = await this.login(payload);
+      const tokens = await this.login({
+        id: payload.sub,
+        email: payload.email,
+        role: payload.role,
+      });
 
       const hashedToken = await hash(tokens.refresh_token, 10);
 
