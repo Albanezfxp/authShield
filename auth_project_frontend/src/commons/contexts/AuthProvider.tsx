@@ -2,10 +2,10 @@ import { useState, useMemo, type ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 
 interface AuthProviderProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   // ✅ Memoizar o valor do context

@@ -3,20 +3,40 @@ import Header from "./Header";
 import "../../styles/AuthLayout.css";
 import { useNavigate } from "react-router-dom";
 
-type AuthProps = {
-  title: string;
-  text: string;
-  login: boolean;
-  children: React.ReactNode;
-};
+interface AuthLayoutProps {
+  readonly title: string;
+  readonly text: string;
+  readonly login: boolean;
+  readonly children: React.ReactNode;
+}
 
 export default function AuthLayout({
   title,
   text,
   login,
   children,
-}: AuthProps) {
+}: Readonly<AuthLayoutProps>) {
   const navigate = useNavigate();
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
+
+  const handleRegisterKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      handleRegisterClick();
+    }
+  };
+
+  const handleLoginKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      handleLoginClick();
+    }
+  };
 
   return (
     <div className="auth-container">
@@ -45,7 +65,9 @@ export default function AuthLayout({
                 <button
                   type="button"
                   className="btn-secondary"
-                  onClick={() => navigate("/register")}
+                  onClick={handleRegisterClick}
+                  onKeyDown={handleRegisterKeyDown}
+                  aria-label="Ir para página de registro"
                 >
                   Criar nova conta
                 </button>
@@ -53,7 +75,9 @@ export default function AuthLayout({
                 <button
                   type="button"
                   className="btn-secondary"
-                  onClick={() => navigate("/login")}
+                  onClick={handleLoginClick}
+                  onKeyDown={handleLoginKeyDown}
+                  aria-label="Ir para página de login"
                 >
                   Fazer login
                 </button>

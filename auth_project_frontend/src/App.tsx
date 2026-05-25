@@ -8,19 +8,17 @@ import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <ToastContainer />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <ToastContainer />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

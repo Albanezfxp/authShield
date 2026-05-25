@@ -16,7 +16,7 @@ export default function Register() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData((prev: registerRequest) => ({
       ...prev,
       [name]: value,
     }));
@@ -24,6 +24,12 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.password !== formData.confirm_password) {
+      toast.error("As senhas não coincidem!");
+      return;
+    }
+
     try {
       const payload = {
         email: formData.email.trim(),
@@ -39,77 +45,72 @@ export default function Register() {
         toast.success("Conta registrada!");
         navigate("/login");
       }
-    } catch (error) {
-      console.error("Registration failed:", error);
+    } catch {
       toast.error("Falha ao registrar");
     }
-
-    console.log(formData);
   };
+
   return (
-    <>
-      <AuthLayout
-        text={"Faça o registro e organize suas tarefas"}
-        title={"Dificuldades para organizar tarefas?"}
-        login={false}
-        children={
-          <form onSubmit={handleSubmit} className="loginForm">
-            <div className="formGroup">
-              <label htmlFor="password">Nome</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Nome"
-                value={formData?.name || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="formGroup">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="seu@email.com"
-                value={formData?.email || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+    <AuthLayout
+      text="Faça o registro e organize suas tarefas"
+      title="Dificuldades para organizar tarefas?"
+      login={false}
+    >
+      <form onSubmit={handleSubmit} className="loginForm">
+        <div className="formGroup">
+          <label htmlFor="name">Nome</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Nome"
+            value={formData?.name || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="formGroup">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="seu@email.com"
+            value={formData?.email || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-            <div className="formGroup">
-              <label htmlFor="password">Senha</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData?.password || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="formGroup">
-              <label htmlFor="password">Confirmar senha</label>
-              <input
-                type="password"
-                id="confirm_password"
-                name="confirm_password"
-                placeholder="••••••••"
-                value={formData?.confirm_password || ""}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
+        <div className="formGroup">
+          <label htmlFor="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            value={formData?.password || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="formGroup">
+          <label htmlFor="confirm_password">Confirmar senha</label>
+          <input
+            type="password"
+            id="confirm_password"
+            name="confirm_password"
+            placeholder="••••••••"
+            value={formData?.confirm_password || ""}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-            <button type="submit" className="submitBtn">
-              Cadastrar
-            </button>
-          </form>
-        }
-      />
-    </>
+        <button type="submit" className="submitBtn">
+          Cadastrar
+        </button>
+      </form>
+    </AuthLayout>
   );
 }
