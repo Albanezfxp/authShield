@@ -1,6 +1,6 @@
 import axios from "axios";
-import type { registerRequest } from "./types/interfaces/register_request";
-import type { loginRequest } from "./types/interfaces/login_request.interface";
+import type { RegisterRequest } from "./types/interfaces/register_request";
+import type { LoginRequest } from "./types/interfaces/login_request.interface";
 import { toast } from "react-toastify";
 import type { CreateTaskInterface } from "./types/interfaces/create_task.interface";
 import type { Situation } from "./types/enums/situation.enum";
@@ -35,7 +35,7 @@ api.interceptors.response.use(
   },
 );
 
-export const fetchLogin = async (payload: loginRequest) => {
+export const fetchLogin = async (payload: LoginRequest) => {
   const response = await api.post(`/user/login`, payload, {
     withCredentials: true,
   });
@@ -54,7 +54,7 @@ export const fetchRefresh = async () => {
   }
 };
 
-export const fetchRegister = async (payload: registerRequest) => {
+export const fetchRegister = async (payload: RegisterRequest) => {
   const response = await api.post(`/user/register`, payload);
   return response;
 };

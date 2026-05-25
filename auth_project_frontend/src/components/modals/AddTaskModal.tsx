@@ -1,5 +1,5 @@
-import { Plus } from "lucide-react";
-import type { ChangeEvent } from "react";
+import { Plus, X } from "lucide-react";
+import { useRef, useEffect, type ChangeEvent } from "react";
 import type { AddTaskModalProps } from "../../types/interfaces/add_task_modal_props.interface";
 
 export default function AddTaskModal({
@@ -8,32 +8,49 @@ export default function AddTaskModal({
   newTask,
   setNewTask,
 }: Readonly<AddTaskModalProps>) {
-  const handleOverlayClick = () => setShowModal(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
-  const handleModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
+
+    return () => {
+      if (dialogRef.current?.open) {
+        dialogRef.current.close();
+      }
+    };
+  }, []);
+
+  const handleClose = () => {
+    if (dialogRef.current) {
+      dialogRef.current.close();
+    }
+    setShowModal(false);
   };
 
-  const handleCloseKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      setShowModal(false);
+  const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    // Fecha modal apenas se clicar fora do conteúdo
+    if (e.target === dialogRef.current) {
+      handleClose();
     }
   };
 
   return (
-    <div
+    <dialog
+      ref={dialogRef}
       className="modal-overlay"
-      onClick={handleOverlayClick}
-      role="presentation"
+      onClick={handleDialogClick}
+      onClose={() => setShowModal(false)}
     >
-      <div className="modal" onClick={handleModalClick} role="dialog">
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button
           className="close-btn"
-          onClick={() => setShowModal(false)}
-          onKeyDown={handleCloseKeyDown}
+          onClick={handleClose}
           aria-label="Fechar modal"
+          type="button"
         >
-          ✕
+          <X size={20} />
         </button>
 
         <div className="modal-header">
@@ -74,7 +91,7 @@ export default function AddTaskModal({
             <button
               type="button"
               className="btn-secondary"
-              onClick={() => setShowModal(false)}
+              onClick={handleClose}
             >
               Cancelar
             </button>
@@ -85,6 +102,6 @@ export default function AddTaskModal({
           </div>
         </form>
       </div>
-    </div>
+    </dialog>
   );
 }

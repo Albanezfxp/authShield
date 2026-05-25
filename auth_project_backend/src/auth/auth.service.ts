@@ -41,8 +41,10 @@ export class AuthService {
 
   async refresh(refresh_token: string) {
     try {
-      const decoded = jwt.verify(refresh_token, process.env.REFRESH_TOKEN_KEY!);
-
+      const decoded = jwt.verify(
+        refresh_token,
+        process.env.REFRESH_TOKEN_KEY!,
+      ) as unknown as jwtPayload;
       const userId = decoded?.sub;
       if (!userId) {
         throw new HttpException('Invalid token', 403);

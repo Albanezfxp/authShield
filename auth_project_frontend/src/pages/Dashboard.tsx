@@ -262,6 +262,27 @@ export default function Dashboard() {
     setDraggedTask(null);
   };
 
+  // ✅ Handler para keyboard em cards
+  const handleTaskKeyDown = (
+    e: React.KeyboardEvent<HTMLDivElement>,
+    task: Task,
+    columnId: ColumnId,
+  ) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      // Permite drag com teclado
+      const dragEvent = new DragEvent("dragstart", {
+        bubbles: true,
+        cancelable: true,
+      });
+      handleDragStart(
+        dragEvent as unknown as DragEvent<HTMLDivElement>,
+        task,
+        columnId,
+      );
+    }
+  };
+
   if (loading) {
     return (
       <div className="dashboard-container">
@@ -318,11 +339,15 @@ export default function Dashboard() {
                         key={task.id}
                         className="task-card"
                         draggable
+                        role="button"
+                        tabIndex={0}
                         onDragStart={(e) => handleDragStart(e, task, column.id)}
+                        onKeyDown={(e) => handleTaskKeyDown(e, task, column.id)}
                         style={{
                           opacity: isUpdating ? 0.6 : 1,
                           pointerEvents: isUpdating ? "none" : "auto",
                         }}
+                        aria-label={`Tarefa: ${task.task_name}`}
                       >
                         <div className="task-title">{task.task_name}</div>
 
@@ -347,6 +372,7 @@ export default function Dashboard() {
                               }
                               disabled={isUpdating}
                               title="Deletar tarefa"
+                              type="button"
                             >
                               <Trash2 size={16} />
                             </button>
