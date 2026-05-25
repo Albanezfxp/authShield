@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
-
-export function AuthProvider({ children }: any) {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+export function AuthProvider({ children }: AuthProviderProps) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   return (
