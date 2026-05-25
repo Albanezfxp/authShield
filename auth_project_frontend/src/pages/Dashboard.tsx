@@ -343,11 +343,12 @@ export default function Dashboard() {
                         tabIndex={0}
                         onDragStart={(e) => handleDragStart(e, task, column.id)}
                         onKeyDown={(e) => handleTaskKeyDown(e, task, column.id)}
+                        aria-label={`Tarefa: ${task.task_name}`}
+                        aria-grabbed={updatingTaskId === task.id}
                         style={{
                           opacity: isUpdating ? 0.6 : 1,
                           pointerEvents: isUpdating ? "none" : "auto",
                         }}
-                        aria-label={`Tarefa: ${task.task_name}`}
                       >
                         <div className="task-title">{task.task_name}</div>
 

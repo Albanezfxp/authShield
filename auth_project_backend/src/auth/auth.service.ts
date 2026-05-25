@@ -46,6 +46,7 @@ export class AuthService {
         process.env.REFRESH_TOKEN_KEY!,
       ) as unknown as jwtPayload;
       const userId = decoded?.sub;
+
       if (!userId) {
         throw new HttpException('Invalid token', 403);
       }

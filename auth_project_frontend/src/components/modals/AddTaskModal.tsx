@@ -43,7 +43,13 @@ export default function AddTaskModal({
       onClick={handleDialogClick}
       onClose={() => setShowModal(false)}
     >
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal"
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {" "}
         <button
           className="close-btn"
           onClick={handleClose}
@@ -52,11 +58,9 @@ export default function AddTaskModal({
         >
           <X size={20} />
         </button>
-
         <div className="modal-header">
           <h2>Nova Tarefa</h2>
         </div>
-
         <form onSubmit={handleAddTask}>
           <div className="modal-body">
             <div className="form-group">
