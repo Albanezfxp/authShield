@@ -39,7 +39,10 @@ export default function Register() {
         toast.success("Conta registrada!");
         navigate("/login");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error("Falha ao registrar");
+    }
 
     console.log(formData);
   };

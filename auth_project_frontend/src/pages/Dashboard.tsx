@@ -85,7 +85,7 @@ export default function Dashboard() {
 
         if (jwt_token) {
           const decoded = jwtDecode<JwtPayload>(jwt_token);
-          setDecodedToken(decoded); // Seta antes de carregar tasks
+          setDecodedToken(decoded);
         }
       } catch (error) {
         console.error("Erro ao carregar credenciais:", error);
@@ -94,7 +94,7 @@ export default function Dashboard() {
     };
 
     loadCredentials();
-  }, []);
+  }, [access_token, setAccess_token]);
   useEffect(() => {
     if (!decoded_token?.sub || !access_token) return;
 

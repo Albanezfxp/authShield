@@ -13,6 +13,7 @@ type jwtPayload = {
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService) {}
+
   private generateAccessToken(payload: jwtPayload) {
     return jwt.sign(payload, process.env.SECRET_KEY!, {
       expiresIn: '15m',
@@ -25,7 +26,7 @@ export class AuthService {
     });
   }
 
-  async login(user: { id: number; email: string; role: $Enums.Role }) {
+  login(user: { id: number; email: string; role: $Enums.Role }) {
     const payload = {
       sub: user.id,
       email: user.email,
@@ -68,7 +69,8 @@ export class AuthService {
         role: user.role,
       };
 
-      const tokens = await this.login({
+      const tokens = this.login({
+        // ✅ Não precisa await agora
         id: payload.sub,
         email: payload.email,
         role: payload.role,
@@ -82,7 +84,7 @@ export class AuthService {
       });
 
       return tokens;
-    } catch (error) {
+    } catch {
       throw new HttpException('Invalid or expired token', 403);
     }
   }

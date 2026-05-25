@@ -68,7 +68,7 @@ export class TaskService {
       throw new HttpException('Task não encontrada', 404);
     }
 
-    const data: any = {};
+    const data: UpdateTaskDto = {};
 
     if (updateTaskDto.task_name !== undefined) {
       data.task_name = updateTaskDto.task_name;
