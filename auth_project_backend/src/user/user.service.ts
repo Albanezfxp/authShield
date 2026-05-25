@@ -72,7 +72,7 @@ export class UserService {
       role: user_bd.role,
     };
 
-    const token = await this.authService.login(payload);
+    const token = this.authService.login(payload); // ✅ REMOVER await
 
     const hashRefreshToken = await hash(token.refresh_token, 10);
     await this.prisma.user.update({
