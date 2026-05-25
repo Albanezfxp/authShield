@@ -29,27 +29,28 @@ export default function AddTaskModal({
     setShowModal(false);
   };
 
-  const handleDialogClick = (e: React.MouseEvent<HTMLDialogElement>) => {
-    // Fecha modal apenas se clicar fora do conteúdo
-    if (e.target === dialogRef.current) {
-      handleClose();
-    }
-  };
-
   return (
     <dialog
       ref={dialogRef}
       className="modal-overlay"
-      onClick={handleDialogClick}
       onClose={() => setShowModal(false)}
     >
+      {/* BACKDROP CONTROLADO */}
       <div
-        className="modal"
-        role="dialog"
-        aria-modal="true"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {" "}
+        className="modal-backdrop"
+        role="button"
+        tabIndex={0}
+        aria-label="Fechar modal"
+        onClick={handleClose}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleClose();
+          }
+        }}
+      />
+
+      {/* CONTEÚDO DO MODAL */}
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button
           className="close-btn"
           onClick={handleClose}
@@ -58,9 +59,11 @@ export default function AddTaskModal({
         >
           <X size={20} />
         </button>
+
         <div className="modal-header">
           <h2>Nova Tarefa</h2>
         </div>
+
         <form onSubmit={handleAddTask}>
           <div className="modal-body">
             <div className="form-group">
@@ -99,6 +102,7 @@ export default function AddTaskModal({
             >
               Cancelar
             </button>
+
             <button type="submit" className="btn-primary">
               <Plus size={18} />
               Criar Tarefa

@@ -1,10 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { $Enums } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-type jwtPayload = {
+type JwtPayloadCustom = {
   sub: number;
   email: string;
   role: string;
@@ -14,20 +14,34 @@ type jwtPayload = {
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private generateAccessToken(payload: jwtPayload) {
-    return jwt.sign(payload, process.env.SECRET_KEY!, {
+  private getAccessSecret(): string {
+    if (!process.env.SECRET_KEY) {
+      throw new Error('SECRET_KEY is not defined');
+    }
+    return process.env.SECRET_KEY;
+  }
+
+  private getRefreshSecret(): string {
+    if (!process.env.REFRESH_TOKEN_KEY) {
+      throw new Error('REFRESH_TOKEN_KEY is not defined');
+    }
+    return process.env.REFRESH_TOKEN_KEY;
+  }
+
+  private generateAccessToken(payload: JwtPayloadCustom): string {
+    return jwt.sign(payload, this.getAccessSecret(), {
       expiresIn: '15m',
     });
   }
 
-  private generateRefreshToken(payload: jwtPayload) {
-    return jwt.sign(payload, process.env.REFRESH_TOKEN_KEY!, {
+  private generateRefreshToken(payload: JwtPayloadCustom): string {
+    return jwt.sign(payload, this.getRefreshSecret(), {
       expiresIn: '7d',
     });
   }
 
   login(user: { id: number; email: string; role: $Enums.Role }) {
-    const payload = {
+    const payload: JwtPayloadCustom = {
       sub: user.id,
       email: user.email,
       role: user.role,
@@ -43,16 +57,17 @@ export class AuthService {
     try {
       const decoded = jwt.verify(
         refresh_token,
-        process.env.REFRESH_TOKEN_KEY!,
-      ) as unknown as jwtPayload;
-      const userId = decoded?.sub;
+        this.getRefreshSecret(),
+      ) as JwtPayload & JwtPayloadCustom;
 
-      if (!userId) {
-        throw new HttpException('Invalid token', 403);
+      if (!decoded?.sub) {
+        throw new HttpException('Invalid token payload', 403);
       }
 
+      const userId = Number(decoded.sub);
+
       const user = await this.prisma.user.findUnique({
-        where: { id: +userId },
+        where: { id: userId },
       });
 
       if (!user || !user.refreshToken) {
@@ -65,16 +80,10 @@ export class AuthService {
         throw new HttpException('Access denied', 403);
       }
 
-      const payload = {
-        sub: user.id,
+      const tokens = this.login({
+        id: user.id,
         email: user.email,
         role: user.role,
-      };
-
-      const tokens = this.login({
-        id: payload.sub,
-        email: payload.email,
-        role: payload.role,
       });
 
       const hashedToken = await hash(tokens.refresh_token, 10);
@@ -85,7 +94,10 @@ export class AuthService {
       });
 
       return tokens;
-    } catch {
+    } catch (error) {
+      // opcional: log estruturado
+      console.error('Refresh token error:', error);
+
       throw new HttpException('Invalid or expired token', 403);
     }
   }
