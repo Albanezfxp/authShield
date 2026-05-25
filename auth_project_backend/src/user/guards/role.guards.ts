@@ -8,6 +8,15 @@ import { Reflector } from '@nestjs/core';
 import { Role } from '@prisma/client';
 import { ROLES_KEY } from 'src/types/decoratores/role.decorator';
 
+// ✅ ADICIONAR INTERFACE
+interface RequestWithUser extends Request {
+  user?: {
+    sub: number;
+    email: string;
+    role: Role;
+  };
+}
+
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
@@ -22,8 +31,8 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user; // vem do seu JWT Guard
+    const request = context.switchToHttp().getRequest<RequestWithUser>(); // ✅ Tipo adicionado
+    const user = request.user; // ✅ Agora é type-safe
 
     if (!user || !requiredRoles.includes(user.role)) {
       throw new ForbiddenException('Você não tem permissão para acessar isso');

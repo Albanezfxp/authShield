@@ -23,6 +23,13 @@ import { RolesGuard } from './guards/role.guards';
 import { registerUserDto } from './dto/register-user.dto';
 import { AuthService } from 'src/auth/auth.service';
 
+// ✅ INTERFACE CORRIGIDA
+interface RequestWithCookies extends Request {
+  cookies: {
+    refresh_token?: string;
+  };
+}
+
 @Controller('user')
 export class UserController {
   constructor(
@@ -59,7 +66,7 @@ export class UserController {
   }
 
   @Post('/auth/refresh')
-  async refresh(@Req() req: Request) {
+  async refresh(@Req() req: RequestWithCookies) {
     const refreshToken = req.cookies?.refresh_token;
 
     if (!refreshToken) {
