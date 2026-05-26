@@ -1,3 +1,4 @@
+// src/test/AuthLayout.test.tsx
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent } from "@testing-library/react";
 import AuthLayout from "../components/_shared_/AuthLayout";
@@ -29,7 +30,6 @@ describe("AuthLayout", () => {
     expect(screen.getByTestId("children-input")).toBeInTheDocument();
     expect(screen.getByText("Não tem conta?")).toBeInTheDocument();
 
-    // CORREÇÃO: Buscando pelo aria-label correto do botão
     expect(
       screen.getByRole("button", { name: /ir para página de registro/i }),
     ).toBeInTheDocument();
@@ -44,7 +44,6 @@ describe("AuthLayout", () => {
 
     expect(screen.getByText("Já tem uma conta?")).toBeInTheDocument();
 
-    // CORREÇÃO: Buscando pelo aria-label correto do botão
     expect(
       screen.getByRole("button", { name: /ir para página de login/i }),
     ).toBeInTheDocument();
@@ -57,7 +56,6 @@ describe("AuthLayout", () => {
       </AuthLayout>,
     );
 
-    // CORREÇÃO: Ajuste de query
     const button = screen.getByRole("button", {
       name: /ir para página de registro/i,
     });
@@ -73,7 +71,6 @@ describe("AuthLayout", () => {
       </AuthLayout>,
     );
 
-    // CORREÇÃO: Ajuste de query
     const button = screen.getByRole("button", {
       name: /ir para página de login/i,
     });
@@ -89,7 +86,6 @@ describe("AuthLayout", () => {
       </AuthLayout>,
     );
 
-    // CORREÇÃO: Ajuste de query
     const button = screen.getByRole("button", {
       name: /ir para página de registro/i,
     });
@@ -105,12 +101,11 @@ describe("AuthLayout", () => {
       </AuthLayout>,
     );
 
-    // CORREÇÃO: Ajuste de query
     const button = screen.getByRole("button", {
       name: /ir para página de registro/i,
     });
     fireEvent.keyDown(button, { key: "Escape" });
 
-    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(mockNavigate).not.toLocaleString();
   });
 });

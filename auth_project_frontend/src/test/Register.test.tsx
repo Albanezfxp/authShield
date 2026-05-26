@@ -83,12 +83,14 @@ describe("Register", () => {
     fireEvent.click(submitButton);
 
     expect(toast.error).toHaveBeenCalledWith("As senhas não coincidem!");
-    expect(fetchRegister).not.toLocaleString(); // Garante que a requisição nem foi enviada
+    // CORREÇÃO: Alterado de .not.toLocaleString() para o assinalador correto do vitest
+    expect(fetchRegister).not.toHaveBeenCalled();
   });
 
   it("deve registrar a conta com sucesso e redirecionar para a página de login", async () => {
-    // Força o mock da API a retornar sucesso (qualquer valor verdadeiro satisfaz o "if (response)")
-    (fetchRegister as any).mockResolvedValue({ data: { success: true } });
+    vi.mocked(fetchRegister).mockResolvedValue({
+      data: { success: true },
+    } as unknown as Awaited<ReturnType<typeof fetchRegister>>);
 
     renderWithProviders(<Register />);
 
@@ -124,8 +126,7 @@ describe("Register", () => {
   });
 
   it("deve exibir um toast de erro se a requisição da API falhar", async () => {
-    // Força o mock da API a rejeitar a Promise para testar o bloco CATCH
-    (fetchRegister as any).mockRejectedValue(new Error("Erro interno"));
+    vi.mocked(fetchRegister).mockRejectedValue(new Error("Erro interno"));
 
     renderWithProviders(<Register />);
 

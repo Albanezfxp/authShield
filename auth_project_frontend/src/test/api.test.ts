@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import axios from "axios";
 
-// 🔥 mock COMPLETO do axios (ANTES de importar api)
 vi.mock("axios", () => {
-  const mockAxiosInstance = {
+  const localMockInstance = {
     post: vi.fn(),
     get: vi.fn(),
     put: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock("axios", () => {
 
   return {
     default: {
-      create: vi.fn(() => mockAxiosInstance),
+      create: vi.fn(() => localMockInstance),
       isAxiosError: vi.fn(() => true),
     },
   };
@@ -29,8 +29,7 @@ vi.mock("react-toastify", () => ({
   },
 }));
 
-// 👇 IMPORTS SÓ DEPOIS DO MOCK
-import axios from "axios";
+// 👇 IMPORTS DAS FUNÇÕES DA API DO PROJETO
 import {
   fetchLogin,
   fetchRegister,
@@ -41,9 +40,11 @@ import {
   fetchUpdateTask,
   fetchDeleteTask,
 } from "../api";
+import { Situation } from "../types/enums/situation.enum";
 
 describe("api", () => {
-  const apiMock = (axios as any).create();
+  // 🚀 Resgatamos o mock criado pelo escopo interno do Vitest de forma limpa e segura
+  const apiMock = vi.mocked(axios.create());
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -88,7 +89,12 @@ describe("api", () => {
   it("should add task with token", async () => {
     apiMock.post.mockResolvedValue({ data: {} });
 
-    await fetchAddTask({} as any, "token123");
+    const mockNewTask = {
+      task_name: "Test Task",
+      description: "Test Description",
+      userId: 12,
+    };
+    await fetchAddTask(mockNewTask, "token123");
 
     expect(apiMock.post).toHaveBeenCalledWith(
       "/task",
@@ -121,7 +127,7 @@ describe("api", () => {
   it("should update task", async () => {
     apiMock.put.mockResolvedValue({ data: {} });
 
-    await fetchUpdateTask("1", "DONE" as any, "token");
+    await fetchUpdateTask("1", Situation.DONE, "token");
 
     expect(apiMock.put).toHaveBeenCalledWith(
       "/task/1",

@@ -1,17 +1,23 @@
-import { renderWithProviders } from "./test-utils/test-utils";
+// src/test/Login.test.tsx
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi } from "vitest";
 import Login from "../pages/Login";
-import { fetchLogin } from "../api";
-import { describe, it, expect } from "vitest"; // <-- ADICIONE ESTA LINHA
+import { renderWithProviders } from "./test-utils/test-utils";
 
-// 👇 MOCK AQUI
+// 🔥 Mock do módulo da API
 vi.mock("../api", () => ({
   fetchLogin: vi.fn(),
 }));
 
+// Import da função após o mock do módulo
+import { fetchLogin } from "../api";
+
 describe("Login", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("should allow typing and submitting", async () => {
     renderWithProviders(<Login />);
 
@@ -28,9 +34,9 @@ describe("Login", () => {
   });
 
   it("should login successfully", async () => {
-    (fetchLogin as any).mockResolvedValue({
+    vi.mocked(fetchLogin).mockResolvedValue({
       data: { access_token: "fake-token" },
-    });
+    } as unknown as Awaited<ReturnType<typeof fetchLogin>>);
 
     renderWithProviders(<Login />);
 
@@ -43,7 +49,8 @@ describe("Login", () => {
   });
 
   it("should show error on invalid login", async () => {
-    (fetchLogin as any).mockRejectedValue(new Error("fail"));
+    // CORREÇÃO: Usando vi.mocked() para injetar a rejeição com tipagem estrita
+    vi.mocked(fetchLogin).mockRejectedValue(new Error("fail"));
 
     renderWithProviders(<Login />);
 

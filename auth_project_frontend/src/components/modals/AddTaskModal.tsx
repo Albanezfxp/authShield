@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, KeyboardEvent } from "react";
 import type { AddTaskModalProps } from "../../types/interfaces/add_task_modal_props.interface";
 
 export default function AddTaskModal({
@@ -8,10 +8,25 @@ export default function AddTaskModal({
   newTask,
   setNewTask,
 }: AddTaskModalProps) {
+  const handleKeyDownClose = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setShowModal(false);
+    }
+  };
+
   return (
-    <div className="modal-overlay" onClick={() => setShowModal(false)}>
+    <div
+      className="modal-overlay"
+      onClick={() => setShowModal(false)}
+      onKeyDown={handleKeyDownClose}
+      role="button"
+      tabIndex={0}
+      aria-label="Fechar modal ao clicar fora"
+    >
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button
+          type="button"
           className="close-btn"
           onClick={() => setShowModal(false)}
           aria-label="Fechar modal"
