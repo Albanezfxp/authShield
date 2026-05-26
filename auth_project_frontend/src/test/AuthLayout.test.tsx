@@ -108,4 +108,18 @@ describe("AuthLayout", () => {
 
     expect(mockNavigate).not.toLocaleString();
   });
+  it("deve aceitar evento de teclado no botão de ir para login quando em modo registro", () => {
+    renderWithProviders(
+      <AuthLayout title="Registro" text="Texto" login={false}>
+        <div />
+      </AuthLayout>,
+    );
+
+    const button = screen.getByRole("button", {
+      name: /ir para página de login/i,
+    });
+    fireEvent.keyDown(button, { key: "Enter" });
+
+    expect(mockNavigate).toHaveBeenCalledWith("/login");
+  });
 });

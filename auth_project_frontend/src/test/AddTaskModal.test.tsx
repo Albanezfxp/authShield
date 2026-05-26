@@ -25,10 +25,22 @@ describe("AddTaskModal", () => {
     ).toBeInTheDocument();
   });
 
+  it("deve evitar a propagação do clique ao interagir com o corpo do modal", () => {
+    renderWithProviders(<AddTaskModal {...defaultProps} />);
+
+    // Procura a div interna com a classe 'modal'
+    const modalContent = screen.getByText("Nova Tarefa").closest(".modal");
+
+    if (modalContent) {
+      fireEvent.click(modalContent);
+      // Se o stopPropagation funcionou, o evento não deve ter sido cancelado e o modal não fecha
+      expect(defaultProps.setShowModal).not.toHaveBeenCalled();
+    }
+  });
+
   it("deve fechar modal ao clicar no botão fechar", () => {
     renderWithProviders(<AddTaskModal {...defaultProps} />);
 
-    // CORREÇÃO: Buscando cirurgicamente pelo botão através do seu aria-label exato
     const closeButton = screen.getByRole("button", { name: "Fechar modal" });
     fireEvent.click(closeButton);
 
@@ -64,5 +76,34 @@ describe("AddTaskModal", () => {
     fireEvent.click(cancelButton);
 
     expect(defaultProps.setShowModal).toHaveBeenCalledWith(false);
+  });
+
+  /* 🚀 NOVOS TESTES DE ACESSIBILIDADE E TECLADO PARA CRAVAR 100% DE COBERTURA */
+
+  it("deve fechar o modal ao pressionar Enter no overlay", () => {
+    renderWithProviders(<AddTaskModal {...defaultProps} />);
+
+    const overlay = screen.getByLabelText("Fechar modal ao clicar fora");
+    fireEvent.keyDown(overlay, { key: "Enter" });
+
+    expect(defaultProps.setShowModal).toHaveBeenCalledWith(false);
+  });
+
+  it("deve fechar o modal ao pressionar a barra de Espaço no overlay", () => {
+    renderWithProviders(<AddTaskModal {...defaultProps} />);
+
+    const overlay = screen.getByLabelText("Fechar modal ao clicar fora");
+    fireEvent.keyDown(overlay, { key: " " }); // Espaço
+
+    expect(defaultProps.setShowModal).toHaveBeenCalledWith(false);
+  });
+
+  it("deve ignorar outras teclas pressionadas no overlay", () => {
+    renderWithProviders(<AddTaskModal {...defaultProps} />);
+
+    const overlay = screen.getByLabelText("Fechar modal ao clicar fora");
+    fireEvent.keyDown(overlay, { key: "Escape" });
+
+    expect(defaultProps.setShowModal).not.toHaveBeenCalled();
   });
 });

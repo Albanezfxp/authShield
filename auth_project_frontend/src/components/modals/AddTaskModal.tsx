@@ -24,7 +24,13 @@ export default function AddTaskModal({
       tabIndex={0}
       aria-label="Fechar modal ao clicar fora"
     >
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        role="document"
+        tabIndex={-1}
+      >
         <button
           type="button"
           className="close-btn"
