@@ -88,9 +88,14 @@ export const fetchUpdateTask = async (
   newState: Situation,
   token: string,
 ) => {
-  const response = await api.put(`/task/${+taskId}`, newState, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await api.put(
+    `/task/${+taskId}`,
+    { situation: newState },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+
   return response;
 };
 

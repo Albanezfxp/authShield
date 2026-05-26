@@ -44,13 +44,6 @@ const organizeTasks = (tasksArray: Task[]): TasksByColumn => {
   };
 };
 
-// ✅ Mapa para substituir ternário complexo
-const SITUATION_MAP: Record<ColumnId, Situation> = {
-  "to-do": Situation.TO_DO,
-  "in-progress": Situation.IN_PROGRESS,
-  done: Situation.DONE,
-};
-
 export default function Dashboard() {
   const [tasks, setTasks] = useState<TasksByColumn>(emptyTasks);
   const [loading, setLoading] = useState(true);
@@ -58,6 +51,7 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [draggedTask, setDraggedTask] = useState<DraggedTask | null>(null);
   const [decoded_token, setDecodedToken] = useState<JwtPayload>();
+
   const [newTask, setNewTask] = useState({
     task_name: "",
     description: "",
@@ -69,7 +63,6 @@ export default function Dashboard() {
     0,
   );
   const completedTasks = tasks["done"].length;
-
   useEffect(() => {
     const loadCredentials = async () => {
       try {
@@ -92,16 +85,16 @@ export default function Dashboard() {
 
         if (jwt_token) {
           const decoded = jwtDecode<JwtPayload>(jwt_token);
-          setDecodedToken(decoded);
+          setDecodedToken(decoded); // Seta antes de carregar tasks
         }
-      } catch {
+      } catch (error) {
+        console.error("Erro ao carregar credenciais:", error);
         setAccess_token(null);
       }
     };
 
     loadCredentials();
-  }, [access_token, setAccess_token]);
-
+  }, []);
   useEffect(() => {
     if (!decoded_token?.sub || !access_token) return;
 
@@ -114,7 +107,8 @@ export default function Dashboard() {
         );
         const organized = organizeTasks(response.data);
         setTasks(organized);
-      } catch {
+      } catch (error) {
+        console.error("Erro ao carregar tarefas:", error);
         toast.error("Erro ao carregar tarefas");
       } finally {
         setLoading(false);
@@ -123,7 +117,6 @@ export default function Dashboard() {
 
     loadTasks();
   }, [decoded_token, access_token]);
-
   const handleAddTask = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -166,7 +159,8 @@ export default function Dashboard() {
       });
 
       setShowModal(false);
-    } catch {
+    } catch (error) {
+      console.error("Erro:", error);
       toast.error("Erro ao criar tarefa");
     }
   };
@@ -179,7 +173,8 @@ export default function Dashboard() {
       }));
 
       await fetchDeleteTask(taskId, access_token);
-    } catch {
+    } catch (error) {
+      console.error("Erro ao deletar:", error);
       toast.error("Erro ao deletar tarefa");
 
       const loadTasks = async () => {
@@ -187,8 +182,8 @@ export default function Dashboard() {
           const response = await fetchTasks(access_token);
           const organized = organizeTasks(response.data);
           setTasks(organized);
-        } catch {
-          // Silently fail on reload
+        } catch (error) {
+          console.error("Erro ao recarregar tarefas:", error);
         }
       };
 
@@ -243,11 +238,16 @@ export default function Dashboard() {
     setUpdatingTaskId(task.id);
 
     try {
-      // ✅ Usar mapa ao invés de ternário aninhado
-      const newSituation = SITUATION_MAP[targetColumnId];
+      const newSituation =
+        targetColumnId === "to-do"
+          ? Situation.TO_DO
+          : targetColumnId === "in-progress"
+          ? Situation.IN_PROGRESS
+          : Situation.DONE;
 
       await fetchUpdateTask(task.id, newSituation, access_token);
-    } catch {
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
       toast.error("Erro ao mover tarefa");
 
       setTasks((prev) => ({
@@ -260,27 +260,6 @@ export default function Dashboard() {
     }
 
     setDraggedTask(null);
-  };
-
-  // ✅ Handler para keyboard em cards
-  const handleTaskKeyDown = (
-    e: React.KeyboardEvent<HTMLDivElement>,
-    task: Task,
-    columnId: ColumnId,
-  ) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      // Permite drag com teclado
-      const dragEvent = new DragEvent("dragstart", {
-        bubbles: true,
-        cancelable: true,
-      });
-      handleDragStart(
-        dragEvent as unknown as DragEvent<HTMLDivElement>,
-        task,
-        columnId,
-      );
-    }
   };
 
   if (loading) {
@@ -330,58 +309,46 @@ export default function Dashboard() {
 
               <div className="tasks-container">
                 {tasks[column.id] && tasks[column.id].length > 0 ? (
-                  tasks[column.id].map((task) => {
-                    // ✅ Extrair isUpdating para variável
-                    const isUpdating = updatingTaskId === task.id;
+                  tasks[column.id].map((task) => (
+                    <div
+                      key={task.id}
+                      className="task-card"
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, task, column.id)}
+                      style={{
+                        opacity: updatingTaskId === task.id ? 0.6 : 1,
+                        pointerEvents:
+                          updatingTaskId === task.id ? "none" : "auto",
+                      }}
+                    >
+                      <div className="task-title">{task.task_name}</div>
 
-                    return (
-                      <div
-                        key={task.id}
-                        className="task-card"
-                        draggable
-                        role="button"
-                        tabIndex={0}
-                        onDragStart={(e) => handleDragStart(e, task, column.id)}
-                        onKeyDown={(e) => handleTaskKeyDown(e, task, column.id)}
-                        aria-label={`Tarefa: ${task.task_name}`}
-                        aria-grabbed={updatingTaskId === task.id}
-                        style={{
-                          opacity: isUpdating ? 0.6 : 1,
-                          pointerEvents: isUpdating ? "none" : "auto",
-                        }}
-                      >
-                        <div className="task-title">{task.task_name}</div>
+                      {task.description && (
+                        <div className="task-description">
+                          {task.description}
+                        </div>
+                      )}
 
-                        {task.description && (
-                          <div className="task-description">
-                            {task.description}
-                          </div>
-                        )}
-
-                        <div className="task-footer">
-                          <div className="task-actions">
-                            {isUpdating && (
-                              <Loader
-                                size={16}
-                                style={{ animation: "spin 1s linear infinite" }}
-                              />
-                            )}
-                            <button
-                              className="task-btn"
-                              onClick={() =>
-                                handleDeleteTask(task.id, column.id)
-                              }
-                              disabled={isUpdating}
-                              title="Deletar tarefa"
-                              type="button"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
+                      <div className="task-footer">
+                        <div className="task-actions">
+                          {updatingTaskId === task.id && (
+                            <Loader
+                              size={16}
+                              style={{ animation: "spin 1s linear infinite" }}
+                            />
+                          )}
+                          <button
+                            className="task-btn"
+                            onClick={() => handleDeleteTask(task.id, column.id)}
+                            disabled={updatingTaskId === task.id}
+                            title="Deletar tarefa"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </div>
                       </div>
-                    );
-                  })
+                    </div>
+                  ))
                 ) : (
                   <div className="empty-state">
                     <Circle size={32} strokeWidth={1} />

@@ -1,5 +1,5 @@
-import { Plus, X } from "lucide-react";
-import { useRef, useEffect, type ChangeEvent } from "react";
+import { Plus } from "lucide-react";
+import type { ChangeEvent } from "react";
 import type { AddTaskModalProps } from "../../types/interfaces/add_task_modal_props.interface";
 
 export default function AddTaskModal({
@@ -7,57 +7,16 @@ export default function AddTaskModal({
   handleAddTask,
   newTask,
   setNewTask,
-}: Readonly<AddTaskModalProps>) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    if (dialogRef.current) {
-      dialogRef.current.showModal();
-    }
-
-    return () => {
-      if (dialogRef.current?.open) {
-        dialogRef.current.close();
-      }
-    };
-  }, []);
-
-  const handleClose = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
-    setShowModal(false);
-  };
-
+}: AddTaskModalProps) {
   return (
-    <dialog
-      ref={dialogRef}
-      className="modal-overlay"
-      onClose={() => setShowModal(false)}
-    >
-      {/* BACKDROP CONTROLADO */}
-      <div
-        className="modal-backdrop"
-        role="button"
-        tabIndex={0}
-        aria-label="Fechar modal"
-        onClick={handleClose}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            handleClose();
-          }
-        }}
-      />
-
-      {/* CONTEÚDO DO MODAL */}
+    <div className="modal-overlay" onClick={() => setShowModal(false)}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button
           className="close-btn"
-          onClick={handleClose}
+          onClick={() => setShowModal(false)}
           aria-label="Fechar modal"
-          type="button"
         >
-          <X size={20} />
+          ✕
         </button>
 
         <div className="modal-header">
@@ -98,11 +57,10 @@ export default function AddTaskModal({
             <button
               type="button"
               className="btn-secondary"
-              onClick={handleClose}
+              onClick={() => setShowModal(false)}
             >
               Cancelar
             </button>
-
             <button type="submit" className="btn-primary">
               <Plus size={18} />
               Criar Tarefa
@@ -110,6 +68,6 @@ export default function AddTaskModal({
           </div>
         </form>
       </div>
-    </dialog>
+    </div>
   );
 }

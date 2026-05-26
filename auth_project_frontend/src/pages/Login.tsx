@@ -99,7 +99,7 @@ export default function Login() {
           </button>
         </div>
 
-        <button type="submit" className="submitBtn">
+        <button type="submit" className="submitBtn" aria-label="submit-login">
           Entrar
         </button>
       </form>

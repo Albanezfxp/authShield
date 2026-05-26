@@ -73,7 +73,6 @@ export default function Home() {
               <div className="avatars">
                 {[1, 2, 3].map((i) => (
                   <div key={`avatar-${i}`}>
-                    {" "}
                     <UserCheck2 size={32} />
                   </div>
                 ))}

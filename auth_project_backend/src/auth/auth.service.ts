@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { $Enums } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 type JwtPayloadCustom = {
   sub: number;
