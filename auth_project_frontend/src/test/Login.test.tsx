@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 import Login from "../pages/Login";
 import { fetchLogin } from "../api";
+import { describe, it, expect } from "vitest"; // <-- ADICIONE ESTA LINHA
 
 // 👇 MOCK AQUI
 vi.mock("../api", () => ({

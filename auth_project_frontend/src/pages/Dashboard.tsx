@@ -94,7 +94,7 @@ export default function Dashboard() {
     };
 
     loadCredentials();
-  }, []);
+  }, [access_token, setAccess_token]);
   useEffect(() => {
     if (!decoded_token?.sub || !access_token) return;
 

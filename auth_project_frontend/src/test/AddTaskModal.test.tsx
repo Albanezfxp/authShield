@@ -3,11 +3,12 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, fireEvent } from "@testing-library/react";
 import AddTaskModal from "../components/modals/AddTaskModal";
 import { renderWithProviders } from "./test-utils/test-utils";
+import type { FormEvent } from "react";
 
 describe("AddTaskModal", () => {
   const defaultProps = {
     setShowModal: vi.fn(),
-    handleAddTask: vi.fn((e: any) => e.preventDefault()),
+    handleAddTask: vi.fn((e: FormEvent) => e.preventDefault()),
     newTask: {
       task_name: "",
       description: "",

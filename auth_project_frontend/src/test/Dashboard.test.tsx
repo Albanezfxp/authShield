@@ -1,4 +1,3 @@
-// src/test/Dashboard.test.tsx
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor, fireEvent } from "@testing-library/react";
 import Dashboard from "../pages/Dashboard";
@@ -48,20 +47,17 @@ describe("Dashboard", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock padrão do useAuth
-    (useAuth as any).mockReturnValue({
+    // Jeito correto de tipar mocks no Vitest sem usar 'any'
+    vi.mocked(useAuth).mockReturnValue({
       access_token: "fake-token",
       setAccess_token: vi.fn(),
     });
 
-    // Mock padrão do jwtDecode
-    (jwtDecode as any).mockReturnValue({ sub: "1" });
-
-    // Mock padrão de sucesso das APIs básicas
-    (fetchTasksByUser as any).mockResolvedValue({ data: [] });
-    (fetchRefresh as any).mockResolvedValue({
+    vi.mocked(jwtDecode).mockReturnValue({ sub: "1" } as any);
+    vi.mocked(fetchTasksByUser).mockResolvedValue({ data: [] } as any);
+    vi.mocked(fetchRefresh).mockResolvedValue({
       data: { access_token: "fake-token" },
-    });
+    } as any);
   });
 
   it("deve mostrar loading inicialmente e depois sumir", async () => {
@@ -74,7 +70,7 @@ describe("Dashboard", () => {
   });
 
   it("deve carregar tarefas com sucesso", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [
         {
           id: "1",
@@ -83,7 +79,7 @@ describe("Dashboard", () => {
           situation: "TO_DO",
         },
       ],
-    });
+    } as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -94,7 +90,7 @@ describe("Dashboard", () => {
   });
 
   it("deve tratar erro ao carregar tarefas da API", async () => {
-    (fetchTasksByUser as any).mockRejectedValue(new Error("Erro de conexão"));
+    vi.mocked(fetchTasksByUser).mockRejectedValue(new Error("Erro de conexão"));
 
     renderWithProviders(<Dashboard />);
 
@@ -104,7 +100,7 @@ describe("Dashboard", () => {
   });
 
   it("deve tentar fazer refresh do token se access_token inicial for nulo", async () => {
-    (useAuth as any).mockReturnValue({
+    vi.mocked(useAuth).mockReturnValue({
       access_token: null,
       setAccess_token: vi.fn(),
     });
@@ -118,13 +114,12 @@ describe("Dashboard", () => {
 
   it("deve limpar access_token se o refresh falhar com erro 401", async () => {
     const mockSetAccessToken = vi.fn();
-    (useAuth as any).mockReturnValue({
+    vi.mocked(useAuth).mockReturnValue({
       access_token: null,
       setAccess_token: mockSetAccessToken,
     });
 
-    const error401 = { response: { status: 401 } };
-    (fetchRefresh as any).mockRejectedValue(error401);
+    vi.mocked(fetchRefresh).mockRejectedValue({ response: { status: 401 } });
 
     renderWithProviders(<Dashboard />);
 
@@ -135,12 +130,12 @@ describe("Dashboard", () => {
 
   it("deve limpar access_token se o refresh falhar com outro erro genérico", async () => {
     const mockSetAccessToken = vi.fn();
-    (useAuth as any).mockReturnValue({
+    vi.mocked(useAuth).mockReturnValue({
       access_token: null,
       setAccess_token: mockSetAccessToken,
     });
 
-    (fetchRefresh as any).mockRejectedValue(new Error("Crash total"));
+    vi.mocked(fetchRefresh).mockRejectedValue(new Error("Crash total"));
 
     renderWithProviders(<Dashboard />);
 
@@ -150,9 +145,9 @@ describe("Dashboard", () => {
   });
 
   it("deve adicionar tarefa com sucesso", async () => {
-    (fetchAddTask as any).mockResolvedValue({
+    vi.mocked(fetchAddTask).mockResolvedValue({
       data: { id: "2", task_name: "Nova Task", description: "" },
-    });
+    } as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -181,7 +176,7 @@ describe("Dashboard", () => {
 
     fireEvent.click(screen.getByText(/nova tarefa/i));
     fireEvent.change(screen.getByPlaceholderText("O que você precisa fazer?"), {
-      target: { value: "   " }, // Título em branco
+      target: { value: "   " },
     });
     fireEvent.click(screen.getByText("Criar Tarefa"));
 
@@ -189,7 +184,7 @@ describe("Dashboard", () => {
   });
 
   it("deve tratar erro genérico da API ao tentar criar tarefa", async () => {
-    (fetchAddTask as any).mockRejectedValue(
+    vi.mocked(fetchAddTask).mockRejectedValue(
       new Error("Erro interno do servidor"),
     );
 
@@ -211,10 +206,10 @@ describe("Dashboard", () => {
   });
 
   it("deve deletar tarefa com sucesso", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [{ id: "1", task_name: "Task Delete", situation: "TO_DO" }],
-    });
-    (fetchDeleteTask as any).mockResolvedValue({});
+    } as any);
+    vi.mocked(fetchDeleteTask).mockResolvedValue({} as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -230,11 +225,11 @@ describe("Dashboard", () => {
   });
 
   it("deve tentar recarregar tudo via fetchTasks se a deleção falhar", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [{ id: "1", task_name: "Task Erro Delete", situation: "TO_DO" }],
-    });
-    (fetchDeleteTask as any).mockRejectedValue(new Error("Não deletou"));
-    (fetchTasks as any).mockResolvedValue({ data: [] });
+    } as any);
+    vi.mocked(fetchDeleteTask).mockRejectedValue(new Error("Não deletou"));
+    vi.mocked(fetchTasks).mockResolvedValue({ data: [] } as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -251,9 +246,9 @@ describe("Dashboard", () => {
   });
 
   it("deve ignorar drop se for na mesma coluna de origem", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [{ id: "1", task_name: "Task Same Col", situation: "TO_DO" }],
-    });
+    } as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -262,21 +257,21 @@ describe("Dashboard", () => {
     });
 
     const task = screen.getByText("Task Same Col");
-    const sameColumn = screen.getByText("A Fazer"); // Mesma coluna original (to-do)
+    const sameColumn = screen.getByText("A Fazer");
 
     const dataTransfer = { data: {}, setData: vi.fn(), effectAllowed: "" };
 
-    fireEvent.dragStart(task, { dataTransfer });
-    fireEvent.drop(sameColumn, { dataTransfer });
+    fireEvent.dragStart(task, { dataTransfer } as any);
+    fireEvent.drop(sameColumn, { dataTransfer } as any);
 
     expect(fetchUpdateTask).not.toHaveBeenCalled();
   });
 
   it("deve mover tarefa (drag and drop) com sucesso", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [{ id: "1", task_name: "Task Drag", situation: "TO_DO" }],
-    });
-    (fetchUpdateTask as any).mockResolvedValue({});
+    } as any);
+    vi.mocked(fetchUpdateTask).mockResolvedValue({} as any);
 
     renderWithProviders(<Dashboard />);
 
@@ -294,9 +289,9 @@ describe("Dashboard", () => {
       dropEffect: "",
     };
 
-    fireEvent.dragStart(task, { dataTransfer });
-    fireEvent.dragOver(targetColumn, { dataTransfer });
-    fireEvent.drop(targetColumn, { dataTransfer });
+    fireEvent.dragStart(task, { dataTransfer } as any);
+    fireEvent.dragOver(targetColumn, { dataTransfer } as any);
+    fireEvent.drop(targetColumn, { dataTransfer } as any);
 
     await waitFor(() => {
       expect(fetchUpdateTask).toHaveBeenCalledWith(
@@ -308,11 +303,11 @@ describe("Dashboard", () => {
   });
 
   it("deve fazer rollback do estado e exibir erro se mover tarefa falhar na API", async () => {
-    (fetchTasksByUser as any).mockResolvedValue({
+    vi.mocked(fetchTasksByUser).mockResolvedValue({
       data: [{ id: "1", task_name: "Task Rollback", situation: "TO_DO" }],
-    });
-    (fetchUpdateTask as any).mockRejectedValue(
-      new Error("Erro de persistência"),
+    } as any);
+    vi.mocked(fetchUpdateTask).mockRejectedValue(
+      new Error("Erro de persistence"),
     );
 
     renderWithProviders(<Dashboard />);
@@ -331,8 +326,8 @@ describe("Dashboard", () => {
       dropEffect: "",
     };
 
-    fireEvent.dragStart(task, { dataTransfer });
-    fireEvent.drop(targetColumn, { dataTransfer });
+    fireEvent.dragStart(task, { dataTransfer } as any);
+    fireEvent.drop(targetColumn, { dataTransfer } as any);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("Erro ao mover tarefa");
